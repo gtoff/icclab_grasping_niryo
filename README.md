@@ -18,4 +18,4 @@ Scripts, configurations, launch files for grasping with Niryo arms at ICCLab
 1. On a terminal run **roslaunch icclab_grasping_niryo niryo_one_aruco_single_view.launch**
 2. Bring up the Find Object GUI and specify the object you wish to grasp
 3. On a new terminal run the **niryo_demo.py** file in *icclab_grasping_niryo/scripts* (you'll have to export the ROS network 
-   variables again before)
+   variables again before running the script)

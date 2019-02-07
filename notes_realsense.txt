@@ -1,0 +1,8 @@
+# make sure on host /dev/video0 to be 666 (chmod) and root:plugdev (chown) like all other video (1,2,3) devs or device won't be detected!!!
+
+sudo apt-key adv --keyserver keys.gnupg.net --recv-key C8B3A55A6F3EFCDE || sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key C8B3A55A6F3EFCDE
+sudo add-apt-repository "deb http://realsense-hw-public.s3.amazonaws.com/Debian/apt-repo xenial main" -u
+sudo adduser tof plugdev
+sudo apt-get install librealsense2 librealsense2-dev librealsense2-utils
+sudo apt-get install ros-kinetic-ar-track-alvar
+# Bus 003 Device 008: ID 8086:0b07 Intel Corp.

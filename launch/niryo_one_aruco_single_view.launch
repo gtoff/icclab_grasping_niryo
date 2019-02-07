@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  	<include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/>
+	<arg name="execute_on_niryo_one_raspberry_pi_image" value="true"/>
+	<arg name="urdf_without_meshes" default="false" />
+  	<param name="robot_description" command="$(find xacro)/xacro --inorder $(find niryo_one_description)/urdf/v2/niryo_one.urdf.xacro" unless="$(arg urdf_without_meshes)"/>
+
+<!--	<include file="$(find gpd)/niryo/niryo_one_bringup/launch/niryo_one_base.launch" pass_all_args="true"/> -->
+   	<!--    <include file="$(find gpd)/niryo/niryo_one_bringup/launch/niryo_one_base_withcamera.launch" pass_all_args="true"/> -->
+ 	<!--   <node pkg="tf" type="static_transform_publisher" name="camera_link_broadcaster" args="0.395 -0.03 0.36 3.14 1.57 0 base_link camera_link 100" /> -->
+    	
+	<!--<node pkg="tf" type="static_transform_publisher" name="base_to_ground_link" args="0 0 0 0 0 0 base_link ground_link 100" />-->
+
+	<arg name="cam_img_raw" value="/camera/color/image_raw" />
+	<arg name="cam_info" value="/camera/color/camera_info" />
+	<arg name="output_frame" value="camera_color_optical_frame" />
+	<node pkg="ar_track_alvar" type="individualMarkersNoKinect" name="ar_tracker" args="4.5 100 100 $(arg cam_img_raw) $(arg cam_info) $(arg output_frame)" respawn="true" />
+
+	<arg name="aruco_marker_id" value="2" />
+	<node pkg="tf" type="static_transform_publisher" name="aruco_link_broadcaster" args="-0.265 0 0 0 0 0 ar_marker_$(arg aruco_marker_id) ground_link 100" />
+
+	<!--<remap from="image" to="/camera/color/image_raw" />
+	<remap from="rgb/image_rect_color" to="/camera/color/image_rect_color/compressedDepth" />
+	<remap from="rgb/camera_info" to="/camera/color/camera_info" />
+	<remap from="registered_depth/image_raw" to="/camera/depth/image_rect_raw" />
+	<node pkg="find_object_2d" type="find_object_2d" name="find_object_2d" /> -->
+	<!--<include file="$(find find_object_2d)/launch/find_object_3d.launch"/> -->
+	<node name="find_object_3d" pkg="find_object_2d" type="find_object_2d" output="screen">
+		<param name="gui" value="true" type="bool"/>
+		<param name="settings_path" value="~/.ros/find_object_2d.ini" type="str"/>
+		<param name="subscribe_depth" value="true" type="bool"/>
+		<param name="objects_path" value="" type="str"/>
+		<param name="object_prefix" value="object" type="str"/>
+		
+		<remap from="rgb/image_rect_color" to="camera/color/image_rect_color"/>
+		<remap from="depth_registered/image_raw" to="camera/depth/image_rect_raw"/>
+		<remap from="depth_registered/camera_info" to="camera/depth/camera_info"/>
+	</node>
+	<!--<node name="tf2_web_republisher" pkg="tf2_web_republisher" type="tf2_web_republisher"/> -->
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find niryo_one_description)/config/default_config.rviz" />
+
+</launch>
+
+
+
+
+

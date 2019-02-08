@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>irlab_grasping</name>
+  <name>icclab_grasping_niryo</name>
   <version>0.0.1</version>
-  <description>The irlab_grasping package</description>
+  <description>The icclab_grasping_niryo package. Scripts, configurations, launch files for grasping with Niryo arms at ICCLab </description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -25,7 +25,8 @@
   <!-- Author tags are optional, multiple are allowed, one per tag -->
   <!-- Authors do not have to be maintainers, but could be -->
   <!-- Example: -->
-  <author email="toff@zhaw.ch">Giovanni Toffetti</author> 
+  <author email="toff@zhaw.ch">Giovanni Toffetti</author>
+  <author email="dimo@zhaw.ch">Dimitris Dimopoulos</author> 
 
 
   <!-- The *depend tags are used to specify dependencies -->
@@ -88,6 +89,7 @@
   <exec_depend>tf2_ros</exec_depend>
   <exec_depend>tf2_eigen</exec_depend>
   <exec_depend>tf2_geometry_msgs</exec_depend>
+  <exec_depend>ar_track_alvar</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

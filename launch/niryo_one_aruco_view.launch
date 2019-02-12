@@ -15,11 +15,11 @@
 
 	<arg name="cam_img_raw" value="/camera/color/image_raw" />
 	<arg name="cam_info" value="/camera/color/camera_info" />
-	<arg name="output_frame" value="camera_color_optical_frame" />
+	<arg name="output_frame" value="camera_depth_optical_frame" />
 	<node pkg="ar_track_alvar" type="findMarkerBundlesNoKinect" name="ar_tracker" args="4.5 0.08 0.2 $(arg cam_img_raw) $(arg cam_info) $(arg output_frame) $(find irlab_grasping)/marker_bundles/bundle9to17.xml" respawn="true" />
   	
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find irlab_grasping)/launch/niryo_camera_aruco.rviz" />
-
+  <!-- Camera topics are empty when launched like this -->
   <group ns="$(arg camera)">
     <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
       <arg name="depth_width"       value="640"/>

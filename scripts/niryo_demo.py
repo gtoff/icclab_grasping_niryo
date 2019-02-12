@@ -3,6 +3,7 @@
 from niryo_one_python_api.niryo_one_api import *
 from pprint import pprint
 import sys
+import yaml
 import subprocess
 import copy
 import rospy
@@ -39,19 +40,21 @@ def niryo_demo():
 	group = moveit_commander.MoveGroupCommander(group_name)
 	group.set_planning_time(10)
 
-	listener = tf.TransformListener()
+	#Read camera-to-ground transform from yaml file and publish
+	with open('camera_params.yaml', 'r') as infile:
+		cam_pose = yaml.load(infile)
+
+	camera_static_transform = subprocess.Popen(
+				["rosrun", "tf", "static_transform_publisher", str(cam_pose[0]), str(cam_pose[1]), str(cam_pose[2]), 
+				str(cam_pose[3]), str(cam_pose[4]), str(cam_pose[5]), str(cam_pose[6]), "camera_depth_optical_frame", "ground_link", "100"])
+
+	print("[INFO] Camera-robot link established")
+
 	#Let the buffer fill so we can get the frame list
-	time.sleep(3)
+	listener = tf.TransformListener()
+	time.sleep(2)
 	frame_list = listener.getFrameStrings()
 
-	listener.waitForTransform("camera_color_optical_frame", "ground_link", rospy.Time(), rospy.Duration(2.0))
-	(trans, quat) = listener.lookupTransform("camera_color_optical_frame", "ground_link", rospy.Time(0))
-	camera_static_transform = subprocess.Popen(
-				["rosrun", "tf", "static_tranform_publisher", trans[0], trans[1], trans[2], 
-				quat[0], quat[1], quat[2], quat[3], "100"])
-
-	print("[INFO] Camera-robot link established, you can remove the ARUCO marker now.")
-	rospy.sleep(5)
 	#One object only
 	object_frame = [e for e in frame_list if e[:7] == "object_"][0]
 
@@ -123,7 +126,7 @@ def niryo_demo():
 
 	n.activate_learning_mode(True)
 
-	camera_static_transform.terminate()
+	camera_static_transform.kill()
 
 	moveit_commander.roscpp_shutdown()
 

@@ -14,6 +14,20 @@ Scripts, configurations, launch files for grasping with Niryo arms at ICCLab
 1. Aruco tracker ROS package - http://wiki.ros.org/ar_track_alvar
 2. Find object 2d - http://wiki.ros.org/find_object_2d
 
+### Calibrating the camera pose
+1. Run **roslaunch icclab_grasping_niryo niryo_one_aruco_view.launch**
+2. Setup the markers on the table 
+3. Run **python calibrate_camera.py**
+This should update the **camera_params.yaml** file with the camera_depth_optical_frame -> ground_link transform in the form
+[position.x 
+ position.y
+ position.z
+ orientation.x
+ orientation.y
+ orientation.z
+ orientation.w]
+This process need only be done every time the camera's pose is altered with respect to the robot.
+
 ### Launch the grasping demo
 1. On a terminal run **roslaunch icclab_grasping_niryo niryo_one_aruco_single_view.launch**
 2. Bring up the Find Object GUI and specify the object you wish to grasp

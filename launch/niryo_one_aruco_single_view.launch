@@ -13,7 +13,7 @@
 
 	<arg name="cam_img_raw" value="/camera/color/image_raw" />
 	<arg name="cam_info" value="/camera/color/camera_info" />
-	<arg name="output_frame" value="camera_color_optical_frame" />
+	<arg name="output_frame" value="camera_depth_optical_frame" />
 	<node pkg="ar_track_alvar" type="individualMarkersNoKinect" name="ar_tracker" args="4.5 100 100 $(arg cam_img_raw) $(arg cam_info) $(arg output_frame)" respawn="true" />
 
 	<arg name="aruco_marker_id" value="2" />

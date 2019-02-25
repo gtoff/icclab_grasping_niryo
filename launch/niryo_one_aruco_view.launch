@@ -31,14 +31,7 @@
       <arg name="enable_color"      value="true"/>
       <arg name="enable_infra1"     value="false"/>
       <arg name="enable_infra2"     value="false"/>
-      <arg name="infra1_width"       value="1280"/>
-      <arg name="infra1_height"      value="720"/>
-      <arg name="infra2_width"       value="1280"/>
-      <arg name="infra2_height"      value="720"/>
-      <arg name="infra1_fps"        value="6"/>
-      <arg name="infra2_fps"        value="6"/>
       <arg name="enable_fisheye"    value="false"/>
-      <arg name="enable_imu"        value="false"/>
       <arg name="enable_pointcloud" value="true"/>
       <arg name="enable_sync"       value="true"/>
       <arg name="tf_prefix"         value="$(arg camera)"/>

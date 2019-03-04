@@ -124,7 +124,7 @@ def niryo_demo():
   plan = group.plan()
   group.go(wait=True)
 
-  n.close_gripper(TOOL_GRIPPER_3_ID, 200)
+  n.close_gripper(TOOL_GRIPPER_2_ID, 200)
   print("[GRIPPER 3 CLOSED]")
 
   place_target = geometry_msgs.msg.Pose()

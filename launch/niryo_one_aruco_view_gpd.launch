@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-  <include file="$(find gpd)/launch/grasp_generation.launch"/>
   <include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/>
   <arg name="execute_on_niryo_one_raspberry_pi_image" value="false"/>
   <arg name="urdf_without_meshes" default="false" />
@@ -26,6 +25,7 @@
 	<!-- run point cloud filtering--> 
   <node name="pointcloud_filtering" pkg="irlab_point_cloud_filtering" type="point_cloud_filtering_server" respawn="false" args="/camera/depth/color/points" output="screen"/>
 
+  <include file="$(find icclab_summit_xl)/launch/include/grasp_generation.launch.xml"/>
   <!-- Does not work, no msgs publishes in camera topics -->
   <!--<group ns="$(arg camera)">
     <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">

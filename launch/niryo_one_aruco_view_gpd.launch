@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-  <include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/>
+  <!--<include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/> -->
   <arg name="execute_on_niryo_one_raspberry_pi_image" value="false"/>
   <arg name="urdf_without_meshes" default="false" />
   <arg name="camera" default="camera"/>
@@ -27,7 +27,7 @@
 
   <include file="$(find icclab_summit_xl)/launch/include/grasp_generation.launch.xml"/>
   <!-- Does not work, no msgs publishes in camera topics -->
-  <!--<group ns="$(arg camera)">
+  <group ns="$(arg camera)">
     <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
       <arg name="manager" 	    value="realsense2_camera_manager"/>
       <arg name="depth_width"       value="1280"/>
@@ -53,7 +53,6 @@
       <arg name="tf_prefix"         value="$(arg camera)"/>
     </include>
 </group>
--->
 </launch>
 
 

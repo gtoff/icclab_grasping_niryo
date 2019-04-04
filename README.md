@@ -39,7 +39,8 @@ This should update the **camera_params.yaml** file with the camera_depth_optical
 This process need only be done every time the camera's pose is altered with respect to the robot.
 
 ### GPD Demo
-
+1. roslaunch icclab_grasping_niryo niryo_one_aruco_view_gpd.launch
+2. python icclab_grasping_niryo/scripts/pick_and_place_niryo.py
 
 ### Launch the grasping demo
 1. On a terminal run **roslaunch icclab_grasping_niryo niryo_one_aruco_single_view.launch**

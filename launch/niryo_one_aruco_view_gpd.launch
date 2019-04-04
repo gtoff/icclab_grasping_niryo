@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-  <include file="$(find gpd)/launch/grasp_generation.launch"/>
   <include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/>
   <arg name="execute_on_niryo_one_raspberry_pi_image" value="false"/>
   <arg name="urdf_without_meshes" default="false" />
@@ -14,17 +13,20 @@
 	<!--<arg name="aruco_marker_id" value="13" /> -->
 	<!-- <node pkg="tf" type="static_transform_publisher" name="aruco_link_broadcaster" args="0 -0.3 0 1.57 0 0 ar_marker_$(arg aruco_marker_id) base_link 100" /> -->
 	<arg name="aruco_marker_id" value="13" />
-	<node pkg="tf" type="static_transform_publisher" name="aruco_link_broadcaster" args="0.003 -0.24 0 1.57 0 0 ar_marker_$(arg aruco_marker_id) ground_link 100" />
+	<node pkg="tf" type="static_transform_publisher" name="aruco_link_broadcaster" args="0.003 -0.23 0 1.57 0 0 ar_marker_$(arg aruco_marker_id) ground_link 100" />
+	<node pkg="tf" type="static_transform_publisher" name="tool_gripper_broadcaster" args="0.025 0 -0.015 0 0 0 tool_link gripper_link 100" />
 
 	<arg name="cam_img_raw" value="/camera/color/image_raw" />
 	<arg name="cam_info" value="/camera/color/camera_info" />
 	<arg name="output_frame" value="camera_color_optical_frame" />
-	<node pkg="ar_track_alvar" type="findMarkerBundlesNoKinect" name="ar_tracker" args="4.5 0.08 0.2 $(arg cam_img_raw) $(arg cam_info) $(arg output_frame) $(find irlab_grasping)/marker_bundles/bundle9to17.xml" respawn="true" />
+	<node pkg="ar_track_alvar" type="findMarkerBundlesNoKinect" name="ar_tracker" args="4.5 0.08 0.2 $(arg cam_img_raw) $(arg cam_info) $(arg output_frame) $(find icclab_grasping_niryo)/marker_bundles/bundle9to17.xml" respawn="true" />
   	
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find irlab_grasping)/launch/niryo_camera_aruco.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find icclab_grasping_niryo)/launch/niryo_camera_aruco.rviz" />
 
 	<!-- run point cloud filtering--> 
-  <node name="pointcloud_filtering" pkg="irlab_point_cloud_filtering" type="point_cloud_filtering_server" respawn="false" args="/camera/depth/color/points" output="screen"/>
+  <node name="pointcloud_filtering" pkg="irlab_point_cloud_filtering" type="point_cloud_filtering_server" respawn="false" args="/camera/depth_registered/points" output="screen"/>
+
+  <include file="$(find icclab_summit_xl)/launch/include/grasp_generation.launch.xml"/>
 
   <!-- Does not work, no msgs publishes in camera topics -->
   <!--<group ns="$(arg camera)">
@@ -51,6 +53,26 @@
       <arg name="enable_pointcloud" value="true"/>
       <arg name="enable_sync"       value="true"/>
       <arg name="tf_prefix"         value="$(arg camera)"/>
+    </include>
+</group>
+-->
+<!-- <group ns="$(arg camera)">
+    <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+      <arg name="depth_width"       value="1280"/>
+      <arg name="depth_height"      value="720"/>
+      <arg name="depth_fps"         value="6"/>
+      <arg name="color_width"       value="1280"/>
+      <arg name="color_height"      value="720"/>
+      <arg name="color_fps"         value="6"/>
+      <arg name="enable_depth"      value="true"/>
+      <arg name="enable_color"      value="true"/>
+      <arg name="enable_infra1"     value="false"/>
+      <arg name="enable_infra2"     value="false"/>
+      <arg name="enable_fisheye"    value="false"/>
+      <arg name="enable_pointcloud" value="true"/>
+      <arg name="enable_sync"       value="true"/>
+      <arg name="tf_prefix"         value="$(arg camera)"/>
+      <arg name="initial_reset"     value="true"/>
     </include>
 </group>
 -->

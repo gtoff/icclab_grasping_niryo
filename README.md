@@ -1,6 +1,16 @@
 # icclab_grasping_niryo
 Scripts, configurations, launch files for grasping with Niryo arms at ICCLab
 
+### Setup
+1. Connect the camera
+2. cd rosdocked_irlab/workspace_inccluded
+3. ./run_with_dev.sh
+4. Pull irlab_point_cloud_filtering and icclab_grasping_niryo
+5. python -m pip install scipy
+6. Setup connection (see below)
+7. Edit icclab_summit_xl/launch/include/grasp_generation.launch.xml
+   workspace_grasps to [-1, 1, -1, 1, -1, 1] and grasp_samples to 200
+
 ### Setting up the Realsense D415 camera
 1. Connect the camera to your machine and follow the instructions found here https://github.com/intel-ros/realsense
 2. If the camera is not recognized follow the instructions in **notes_realsense.txt**
@@ -14,7 +24,7 @@ Scripts, configurations, launch files for grasping with Niryo arms at ICCLab
 1. Aruco tracker ROS package - http://wiki.ros.org/ar_track_alvar
 2. Find object 2d - http://wiki.ros.org/find_object_2d
 
-### Calibrating the camera pose
+### Calibrating the camera pose - Doesn't work for now
 1. Run **roslaunch icclab_grasping_niryo niryo_one_aruco_view.launch**
 2. Setup the markers on the table 
 3. Run **python calibrate_camera.py**
@@ -27,6 +37,9 @@ This should update the **camera_params.yaml** file with the camera_depth_optical
  orientation.z
  orientation.w]
 This process need only be done every time the camera's pose is altered with respect to the robot.
+
+### GPD Demo
+
 
 ### Launch the grasping demo
 1. On a terminal run **roslaunch icclab_grasping_niryo niryo_one_aruco_single_view.launch**

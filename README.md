@@ -5,11 +5,12 @@ Scripts, configurations, launch files for grasping with Niryo arms at ICCLab
 1. Connect the camera
 2. cd rosdocked_irlab/workspace_inccluded
 3. ./run_with_dev.sh
-4. Pull irlab_point_cloud_filtering and icclab_grasping_niryo
+4. Pull icclab_summit_xl, irlab_point_cloud_filtering and icclab_grasping_niryo
 5. python -m pip install scipy
 6. Setup connection (see below)
 7. Edit icclab_summit_xl/launch/include/grasp_generation.launch.xml
    workspace_grasps to [-1, 1, -1, 1, -1, 1] and grasp_samples to 200
+8. catkin_make
 
 ### Setting up the Realsense D415 camera
 1. Connect the camera to your machine and follow the instructions found here https://github.com/intel-ros/realsense

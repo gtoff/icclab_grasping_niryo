@@ -13,8 +13,8 @@ Scripts, configurations, launch files for grasping with Niryo arms at ICCLab
 
 ### Configuring connection between your PC and robot
 1. Get the IP addresses of your PC and niryo arm using **ifconfig** (optionally you can set up aliases for these IPs in /etc/hosts and /etc/hostname)
-2. Connect to the Niryo arm using **ssh niryo@<IP_OF_NIRYO>** - password: **robotics** and then run **export ROS_HOSTNAME=<IP_OF_NIRYO>**
-3. On your PC run **export ROS_MASTER_URI=http://<IP_OF_NIRYO>:11311** and **export ROS_HOSTNAME=<IP_OF_PC>**
+2. Connect to the Niryo arm using **ssh niryo@<IP_OF_NIRYO>** - password: **robotics** and then run **export ROS_IP=<IP_OF_NIRYO>**
+3. On your PC run **export ROS_MASTER_URI=http://<IP_OF_NIRYO>:11311** and **export ROS_IP=<IP_OF_PC>**
 
 ### Tool dependencies
 1. Aruco tracker ROS package - http://wiki.ros.org/ar_track_alvar

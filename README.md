@@ -5,19 +5,14 @@ Scripts, configurations, launch files for grasping with Niryo arms at ICCLab
 1. Connect the camera
 2. cd rosdocked_irlab/workspace_inccluded
 3. ./run_with_dev.sh
-4. Pull icclab_summit_xl, irlab_point_cloud_filtering and icclab_grasping_niryo
-5. python -m pip install scipy
-6. Setup connection (see below)
-7. Edit icclab_summit_xl/launch/include/grasp_generation.launch.xml
-   workspace_grasps to [-1, 1, -1, 1, -1, 1] and grasp_samples to 200
-8. catkin_make
+4. Setup connection (see below)
 
 ### Setting up the Realsense D415 camera
 1. Connect the camera to your machine and follow the instructions found here https://github.com/intel-ros/realsense
 2. If the camera is not recognized follow the instructions in **notes_realsense.txt**
 
 ### Configuring connection between your PC and robot
-1. Get the IP addresses of your PC and niryo arm using **ifconfig** (optionally you can set up aliases for these IPs in /etc/hosts)
+1. Get the IP addresses of your PC and niryo arm using **ifconfig** (optionally you can set up aliases for these IPs in /etc/hosts and /etc/hostname)
 2. Connect to the Niryo arm using **ssh niryo@<IP_OF_NIRYO>** - password: **robotics** and then run **export ROS_HOSTNAME=<IP_OF_NIRYO>**
 3. On your PC run **export ROS_MASTER_URI=http://<IP_OF_NIRYO>:11311** and **export ROS_HOSTNAME=<IP_OF_PC>**
 
@@ -26,7 +21,7 @@ Scripts, configurations, launch files for grasping with Niryo arms at ICCLab
 2. Find object 2d - http://wiki.ros.org/find_object_2d
 
 ### Calibrating the camera pose - Doesn't work for now
-1. Run **roslaunch icclab_grasping_niryo niryo_one_aruco_view.launch**
+1. Run **roslaunch icclab_grasping_niryo camera_niryo.launch**
 2. Setup the markers on the table 
 3. Run **python calibrate_camera.py**
 This should update the **camera_params.yaml** file with the camera_depth_optical_frame -> ground_link transform in the form
@@ -41,7 +36,7 @@ This process need only be done every time the camera's pose is altered with resp
 
 ### GPD Demo
 1. roslaunch icclab_grasping_niryo niryo_one_aruco_view_gpd.launch
-2. python icclab_grasping_niryo/scripts/pick_and_place_niryo.py
+2. python ~/catkin_ws/src/icclab_grasping_niryo/scripts/pick_and_place_niryo.py
 
 ### Launch the grasping demo
 1. On a terminal run **roslaunch icclab_grasping_niryo niryo_one_aruco_single_view.launch**

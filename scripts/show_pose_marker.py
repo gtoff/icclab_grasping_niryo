@@ -68,7 +68,7 @@ if __name__ == '__main__':
   try:
     # Start the ROS node
     rospy.init_node('pose_marker_visualizer')
-    publisher = rospy.Publisher(topic, MarkerArray, queue_size=1, latch=True)
+    publisher = rospy.Publisher(topic, MarkerArray, queue_size=1)
     poseStamped = geometry_msgs.msg.PoseStamped();
     poseStamped.header.frame_id = "map"
     poseStamped.pose.position.x = 0.1;

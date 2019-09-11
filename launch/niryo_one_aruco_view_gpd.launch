@@ -6,20 +6,22 @@
   <arg name="camera" default="camera"/>
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(find niryo_one_description)/urdf/v2/niryo_one.urdf.xacro" unless="$(arg urdf_without_meshes)"/>
 
+  <!-- <include file="$(find niryo_one_bringup)/launch/robot_commander.launch" /> -->
+
 <!--	<include file="$(find gpd)/niryo/niryo_one_bringup/launch/niryo_one_base.launch" pass_all_args="true"/> -->
    	<!--    <include file="$(find gpd)/niryo/niryo_one_bringup/launch/niryo_one_base_withcamera.launch" pass_all_args="true"/> -->
  	<!--   <node pkg="tf" type="static_transform_publisher" name="camera_link_broadcaster" args="0.395 -0.03 0.36 3.14 1.57 0 base_link camera_link 100" /> -->
     	
 	<!--<arg name="aruco_marker_id" value="13" /> -->
 	<!-- <node pkg="tf" type="static_transform_publisher" name="aruco_link_broadcaster" args="0 -0.3 0 1.57 0 0 ar_marker_$(arg aruco_marker_id) base_link 100" /> -->
-	<arg name="aruco_marker_id" value="13" />
+	<!-- <arg name="aruco_marker_id" value="13" />
 	<node pkg="tf" type="static_transform_publisher" name="aruco_link_broadcaster" args="0.003 -0.23 0 1.57 0 0 ar_marker_$(arg aruco_marker_id) ground_link 100" />
 	<node pkg="tf" type="static_transform_publisher" name="tool_gripper_broadcaster" args="0.025 0 -0.015 0 0 0 tool_link gripper_link 100" />
 
 	<arg name="cam_img_raw" value="/camera/color/image_raw" />
 	<arg name="cam_info" value="/camera/color/camera_info" />
 	<arg name="output_frame" value="camera_color_optical_frame" />
-	<node pkg="ar_track_alvar" type="findMarkerBundlesNoKinect" name="ar_tracker" args="4.5 0.08 0.2 $(arg cam_img_raw) $(arg cam_info) $(arg output_frame) $(find icclab_grasping_niryo)/marker_bundles/bundle9to17.xml" respawn="true" />
+	<node pkg="ar_track_alvar" type="findMarkerBundlesNoKinect" name="ar_tracker" args="4.5 0.08 0.2 $(arg cam_img_raw) $(arg cam_info) $(arg output_frame) $(find icclab_grasping_niryo)/marker_bundles/bundle9to17.xml" respawn="true" /> -->
   	
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find icclab_grasping_niryo)/launch/niryo_camera_aruco.rviz" />
 

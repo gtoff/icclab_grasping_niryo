@@ -2,7 +2,6 @@ import rospy
 import numpy as np
 import pcl
 from tools import *
-from scipy.linalg import lstsq
 from std_msgs.msg import Header, Int64
 from geometry_msgs.msg import Point
 from pointcloud_operations import filtering

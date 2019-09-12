@@ -58,7 +58,7 @@ class GpdPickPlace(object):
     grasps = []
     mark_pose = False
     #grasp_offset = 0
-    grasp_offset = -0.05
+    grasp_offset = -0.03
     #grasp_offset = -0.05
 
     def __init__(self, mark_pose=False):
@@ -69,29 +69,16 @@ class GpdPickPlace(object):
             self.marker_publisher = rospy.Publisher('visualization_marker', Marker, queue_size=5)
             #self.marker_publisher = rospy.Publisher('visualization_marker', Marker)
         self.p = PickPlaceInterface(group="arm", ee_group="tool", verbose=True)
+        self.planning = PlanningSceneInterface("camera_color_optical_frame")
         #self.tfBuffer = tf2_ros.Buffer()
         #self.listener = tf2_ros.TransformListener(self.tfBuffer)
         #self.transformer = tf2_ros.BufferInterface()
 
         self.tf = tf.TransformListener()
+        self.br = tf.TransformBroadcaster()
         #self.bcaster = tf2_ros.StaticTransformBroadcaster()
         #self.transformer = tf.TransformerROS(cache_time = rospy.Duration(10.0))
         #time.sleep(3)
-
-        # with open('camera_params.yaml', 'r') as infile:
-        #     cam_pose = yaml.load(infile)
-
-        # transform_msg = geometry_msgs.msg.TransformStamped()
-        # transform_msg.header.frame_id = "camera_color_optical_frame"
-        # transform_msg.child_frame_id  = "ground_link"
-        # transform_msg.transform.translation.x = cam_pose[0]
-        # transform_msg.transform.translation.y = cam_pose[1]
-        # transform_msg.transform.translation.z = cam_pose[2]
-        # transform_msg.transform.rotation.x = cam_pose[3]
-        # transform_msg.transform.rotation.y = cam_pose[4]
-        # transform_msg.transform.rotation.z = cam_pose[5]
-        # transform_msg.transform.rotation.w = cam_pose[6]
-        # self.bcaster.sendTransform(transform_msg)
 
     def grasp_callback(self, msg):
         self.grasps = msg.grasps
@@ -137,7 +124,7 @@ class GpdPickPlace(object):
         for i in range(0, len(grasps)):
 
             g = Grasp()
-            g.id = "dupa"
+            g.id = "dupa_" + str(i)
             gp = PoseStamped()
             gp.header.frame_id = "camera_color_optical_frame"
 
@@ -185,7 +172,8 @@ class GpdPickPlace(object):
            # g.grasp_posture.points.append(pos)
            # g.grasp_posture.header.frame_id = "hand_link"
 
-            g.allowed_touch_objects = ["<octomap>", "obj"]
+            #g.allowed_touch_objects = ["<octomap>", "obj"]
+            g.allowed_touch_objects = ["obj"]
             g.max_contact_force = 0.0
             #g.grasp_quality = grasps[0].score.data  perche 0 e non i????
             g.grasp_quality = grasps[i].score.data
@@ -233,24 +221,55 @@ class GpdPickPlace(object):
             #self.tf.waitForTransform("camera_color_optical_frame", "base_link", t, rospy.Duration(4.0))
             #grasp_base = self.transformer.TransformPose("base_link", grasp_point)
             #grasp_base = self.transformer.transform(grasp_point, "base_link", timeout=rospy.Duration(4.0))
+            
             grasp_base = self.tf.transformPose("base_link", g.grasp_pose)
-            #pprint(grasp_base)
 
-            #Get tool and gripper translations from base_link
-            #self.tf.waitForTransform("base_link", "tool_link", rospy.Duration(4.0))
-            tool_trans, _    = self.tf.lookupTransform("base_link", "tool_link", rospy.Time(0))
-            gripper_trans, _ = self.tf.lookupTransform("base_link", "gripper_link", rospy.Time(0))
-            #pprint(tool_trans + gripper_trans)
+            # #Get tool and gripper translations from base_link
+            # #self.tf.waitForTransform("base_link", "tool_link", rospy.Duration(4.0))
+            # tool_trans, _    = self.tf.lookupTransform("base_link", "tool_link", rospy.Time(0))
+            # gripper_trans, _ = self.tf.lookupTransform("base_link", "gripper_link", rospy.Time(0))
 
-            g.grasp_pose.header.frame_id = "base_link"
-            g.grasp_pose.pose.position.x = tool_trans[0] + grasp_base.pose.position.x - gripper_trans[0]
-            g.grasp_pose.pose.position.y = tool_trans[1] + grasp_base.pose.position.y - gripper_trans[1]
-            g.grasp_pose.pose.position.z = tool_trans[2] + grasp_base.pose.position.z - gripper_trans[2]
-            g.grasp_pose.pose.orientation.x = grasp_base.pose.orientation.x
-            g.grasp_pose.pose.orientation.y = grasp_base.pose.orientation.y
-            g.grasp_pose.pose.orientation.z = grasp_base.pose.orientation.z
-            g.grasp_pose.pose.orientation.w = grasp_base.pose.orientation.w
+            # g.grasp_pose.header.frame_id = "base_link"
+            # g.grasp_pose.pose.position.x = tool_trans[0] + grasp_base.pose.position.x - gripper_trans[0]
+            # g.grasp_pose.pose.position.y = tool_trans[1] + grasp_base.pose.position.y - gripper_trans[1]
+            # g.grasp_pose.pose.position.z = tool_trans[2] + grasp_base.pose.position.z - gripper_trans[2]
+            # g.grasp_pose.pose.orientation.x = grasp_base.pose.orientation.x
+            # g.grasp_pose.pose.orientation.y = grasp_base.pose.orientation.y
+            # g.grasp_pose.pose.orientation.z = grasp_base.pose.orientation.z
+            # g.grasp_pose.pose.orientation.w = grasp_base.pose.orientation.w
             #pprint(g.grasp_pose)
+
+            # q = Quaternion(g.grasp_pose.pose.orientation.w,
+            #                g.grasp_pose.pose.orientation.x,
+            #                g.grasp_pose.pose.orientation.y,
+            #                g.grasp_pose.pose.orientation.z)
+
+            # (x_axis, z_axis) = (q.rotate([1.0, 0.0, 0.0]),
+            #                     q.rotate([0.0, 0.0, 1.0]))
+
+            # g.grasp_pose.header.frame_id = "base_link"
+            # g.grasp_pose.pose.position.x = grasp_base.pose.position.x - 0.025 * x_axis[0] + 0.015 * z_axis[0] 
+            # g.grasp_pose.pose.position.y = grasp_base.pose.position.y - 0.025 * x_axis[1] + 0.015 * z_axis[1] 
+            # g.grasp_pose.pose.position.z = grasp_base.pose.position.z - 0.025 * x_axis[2] + 0.015 * z_axis[2] 
+            # g.grasp_pose.pose.orientation.x = grasp_base.pose.orientation.x
+            # g.grasp_pose.pose.orientation.y = grasp_base.pose.orientation.y
+            # g.grasp_pose.pose.orientation.z = grasp_base.pose.orientation.z
+            # g.grasp_pose.pose.orientation.w = grasp_base.pose.orientation.w
+            t = rospy.Time.now()
+            self.br.sendTransform((grasp_base.pose.position.x, grasp_base.pose.position.y, grasp_base.pose.position.z),
+                              (grasp_base.pose.orientation.x, grasp_base.pose.orientation.y, grasp_base.pose.orientation.z, grasp_base.pose.orientation.w),
+                              t, "grasp_frame", "base_link")
+
+            self.br.sendTransform((-0.025, 0.0, 0.015), (0, 0, 0, 1), t, "virtual_tool", "grasp_frame")
+
+            tool_pose = geometry_msgs.msg.PoseStamped()
+            tool_pose.header.frame_id = "virtual_tool"
+            tool_pose.pose.orientation.w = 1.0
+
+            self.tf.waitForTransform("base_link", "virtual_tool", t, rospy.Duration(4.0))
+            g.grasp_pose.header.frame_id = "base_link"
+            g.grasp_pose = self.tf.transformPose("base_link", tool_pose)
+
 
             formatted_grasps.append(g)
         return formatted_grasps
@@ -297,23 +316,30 @@ class GpdPickPlace(object):
                     pevent("All grasps failed. Aborting")
                     exit(1)
 
-    def place2(self, place_pose):
+    def place2(self, place_msg, niryo):
         pevent("Place sequence started")
         group_name = "arm"
 
         group = moveit_commander.MoveGroupCommander(group_name)
 
+        p2 = copy.deepcopy(place_msg.grasp_pose.pose)
+        p2.position.z = 0.3
+        group.set_pose_target(p2)
+        plan = group.go(wait=True)
+        group.stop()
+        group.clear_pose_targets()
 
-        pose_goal = geometry_msgs.msg.Pose()
-        pose_goal.orientation.w = 1.0
-        pose_goal.position.x = 0.24
-        pose_goal.position.y = 0.22
-        pose_goal.position.z = 0.31
-        #pose_goal.orientation.w = place_pose.grasp_pose.pose.orientation.w
-        #pose_goal.orientation.x = place_pose.grasp_pose.pose.orientation.x
-        #pose_goal.orientation.y = place_pose.grasp_pose.pose.orientation.y
-        #pose_goal.orientation.z = place_pose.grasp_pose.pose.orientation.z
-        group.set_pose_target(pose_goal)
+        p3 = copy.deepcopy(place_msg.grasp_pose.pose)
+        p3.position.y = -place_msg.grasp_pose.pose.position.y
+        p3.position.z = 0.3
+        group.set_pose_target(p3)
+        plan = group.go(wait=True)
+        group.stop()
+        group.clear_pose_targets()
+
+        p4 = copy.deepcopy(place_msg.grasp_pose.pose)
+        p4.position.y = -place_msg.grasp_pose.pose.position.y
+        group.set_pose_target(p4)
 
         # The go command can be called with joint values, poses, or without any
         # parameters if you have already set the pose or joint target for the group
@@ -325,19 +351,73 @@ class GpdPickPlace(object):
 
         group.clear_pose_targets()
 
+        niryo.open_gripper(TOOL_GRIPPER_3_ID, 200)
+        print("Gripper 2 opened")
 
+        p5 = copy.deepcopy(place_msg.grasp_pose.pose)
+        p5.position.y = -place_msg.grasp_pose.pose.position.y
+        p5.position.z = 0.3
+        group.set_pose_target(p5)
+        plan = group.go(wait=True)
+        group.stop()
+        group.clear_pose_targets()
 
+        # p6 = Pose()
+        # p6.position.x = 0.065
+        # p6.position.y = 0.0
+        # p6.position.z = 0.207
+        # p6.orientation.x = 0.0
+        # p6.orientation.y = 0.007
+        # p6.orientation.z = 0.0
+        # p6.orientation.w = 1.0
+        # group.set_pose_target(p6)
+        # plan = group.go(wait=True)
+        # group.stop()
+        # group.clear_pose_targets()
 
-    def place(self, place_pose):
+    def return_to_rest(self, place_msg):
+        pevent("Returning to resting position")
+        group_name = "arm"
+
+        group = moveit_commander.MoveGroupCommander(group_name)
+
+        p1 = copy.deepcopy(place_msg.grasp_pose.pose)
+        p1.position.y = -place_msg.grasp_pose.pose.position.y
+        p1.position.z = 0.3
+        group.set_pose_target(p1)
+        plan = group.go(wait=True)
+        group.stop()
+        group.clear_pose_targets()
+
+        p2 = Pose()
+        p2.position.x = 0.065
+        p2.position.y = 0.0
+        p2.position.z = 0.207
+        p2.orientation.x = 0.0
+        p2.orientation.y = 0.007
+        p2.orientation.z = 0.0
+        p2.orientation.w = 1.0
+        group.set_pose_target(p2)
+        plan = group.go(wait=True)
+        group.stop()
+        group.clear_pose_targets()
+
+    def place(self, place_msg):
         pevent("Place sequence started")
 
+        #places = self.generate_place_poses(place_pose)
+        #place_pose is a Grasp msg
+        l = PlaceLocation()
+        l.id = "place target"
+        l.place_pose = place_msg.grasp_pose
+        l.place_pose.pose.position.y = -l.place_pose.pose.position.y
 
-        places = self.generate_place_poses(place_pose)
-
-        place_result = self.p.place_with_retry("obj", places, support_name="<octomap>", planning_time=9001,
+        _, place_result = self.p.place_with_retry("obj", [l, ], support_name="<octomap>", planning_time=9001,
                                   goal_is_eef=True)
 
-               # pevent("Planner returned: " + get_moveit_error_code(place_result.error_code.val))
+        pevent("Planner returned: " + get_moveit_error_code(place_result.error_code.val))
+        #Keep getting INVALID_GROUP_NAME - why???
+        #Does pick kill the planning group?
 
     def generate_place_poses(self, initial_place_pose):
         places = list()
@@ -378,8 +458,6 @@ class GpdPickPlace(object):
         return places
 
     def add_object_mesh(self):
-        planning = PlanningSceneInterface("camera_color_optical_frame")
-
         obj_pose = Pose()
         obj_pose.position.x = 0
         obj_pose.position.y = 0
@@ -388,7 +466,22 @@ class GpdPickPlace(object):
         obj_pose.orientation.y = 0
         obj_pose.orientation.z = 0
         obj_pose.orientation.w = 1
-        planning.addMesh("obj", obj_pose, "object.stl", use_service = True)
+        self.planning.addMesh("obj", obj_pose, "object.stl", use_service = True)
+
+        # p = Pose()
+        # p.position.x = 0
+        # p.position.y = 0
+        # p.position.z = 0
+        # p.orientation.x = 0
+        # p.orientation.y = 0
+        # p.orientation.z = 0
+        # p.orientation.w = 1
+        # planning.add_box("table", p, (1, 1, 1))
+        #t = rospy.Time.now()
+        #self.tf.waitForTransform("ground_link", "camera_color_optical_frame", t, rospy.Duration(4.0))
+        #(trans, quat) = self.tf.lookupTransform("camera_color_optical_frame", "ground_link", t)
+
+        self.planning.attachBox("table", 1, 1, 1, 0, 0, -0.5, link_name="ground_link")
         #time.sleep(15)
         #planning.clear()
      #   rospy.sleep(3.14)
@@ -490,7 +583,7 @@ if __name__ == "__main__":
     for i in range (0, num_objects):
         # Subscribe for grasps
         pnp = GpdPickPlace(mark_pose=True)
-
+        pnp.planning.clear()
 
          # Get the pointcloud from camera, filter it, extract indices and publish it to gpd CNN
         #gpd_prep = GpdGrasps(max_messages=8)
@@ -511,11 +604,12 @@ if __name__ == "__main__":
 
 
         # Place object with successful grasp pose as the starting point
-        pnp.place2(successful_grasp)
-        n.open_gripper(TOOL_GRIPPER_3_ID, 200)
-        print("Gripper 2 opened")
-        n.close_gripper(TOOL_GRIPPER_3_ID, 200)
-        print("Gripper 2 closed")
+        pnp.place2(successful_grasp, n)
+        #n.open_gripper(TOOL_GRIPPER_3_ID, 200)
+        #print("Gripper 2 opened")
+        #pnp.return_to_rest(successful_grasp)
+        #n.close_gripper(TOOL_GRIPPER_3_ID, 200)
+        #print("Gripper 2 closed")
   #  pnp.place(successful_grasp)
   #  fix_grasp =  pnp.get_know_successful_grasp()
    # pnp.place(fix_grasp)

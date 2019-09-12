@@ -9,7 +9,7 @@
  	<!--   <node pkg="tf" type="static_transform_publisher" name="camera_link_broadcaster" args="0.395 -0.03 0.36 3.14 1.57 0 base_link camera_link 100" /> -->
     	
 	<arg name="aruco_marker_id" value="13" />
-	<node pkg="tf" type="static_transform_publisher" name="aruco_link_broadcaster" args="0.003 -0.23 0 1.57 0 0 ar_marker_$(arg aruco_marker_id) ground_link 100" />
+	<node pkg="tf" type="static_transform_publisher" name="aruco_link_broadcaster" args="0.003 -0.23 0 1.57 0 0 ar_marker_$(arg aruco_marker_id) ground_link 100" /> 
 
 	<arg name="cam_img_raw" value="/camera/color/image_raw" />
 	<arg name="cam_info" value="/camera/color/camera_info" />

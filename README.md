@@ -1,4 +1,4 @@
-# icclab_grasping_niryo
+# icclab_grasping_niryo -- OUT OF DATE, WILL WRITE WIKI AND LINK HERE
 Scripts, configurations, launch files for grasping with Niryo arms at ICCLab
 
 ### Setup

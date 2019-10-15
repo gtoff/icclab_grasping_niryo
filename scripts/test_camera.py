@@ -18,7 +18,7 @@ from std_msgs.msg import String
 from moveit_commander.conversions import pose_to_list
 
 def test_camera():
-	rospy.init_node("camere_test")
+	rospy.init_node("camera_test")
 
 	bcaster = tf2_ros.StaticTransformBroadcaster()
 

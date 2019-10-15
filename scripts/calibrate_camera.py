@@ -22,7 +22,7 @@ def calibrate_camera():
 	listener = tf.TransformListener(cache_time=rospy.Duration(10.0))
 	#transformer = tf.TransformerROS(True, rospy.Duration(10.0))
 
-	time.sleep(1)
+	time.sleep(10)
 	t = rospy.Time.now()
 
 	listener.waitForTransform("ground_link", "camera_link", t, rospy.Duration(4.0))

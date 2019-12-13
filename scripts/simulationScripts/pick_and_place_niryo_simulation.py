@@ -679,11 +679,11 @@ if __name__ == "__main__":
     #group_name = "gripper"
     group_name = "arm"
     group = moveit_commander.MoveGroupCommander(group_name, robot_description="/robot_description", ns="")
-    group.set_planner_id("BiTRRT")
-    #group.set_planner_id("SPARStwo")
+    #group.set_planner_id("BiTRRT")
+    group.set_planner_id("SPARStwo")
     group.set_max_velocity_scaling_factor(0.05)
     group.set_goal_orientation_tolerance(0.01)
-    group.set_planning_time(5)
+    group.set_planning_time(7)
     group.allow_replanning(True)
     planning = PlanningSceneInterface("ground_link", ns="")
     planning.clear()
@@ -695,15 +695,12 @@ if __name__ == "__main__":
     rospy.wait_for_service('/clear_octomap')
     clear_octomap = rospy.ServiceProxy('/clear_octomap', Empty)
     clear_octomap()
-   
-    print " I am AT line 725!! "
 
     #num_view = 1
     for r in range (0, num_objects):
         planning.clear()
         
         clear_octomap()
-        print " I am at line 741!!"        
 	# We have to add a check, so that this is called only if the initial_pose was successful
         call_pointcloud_filter_service()
         pnp.wait_for_mesh_and_save()

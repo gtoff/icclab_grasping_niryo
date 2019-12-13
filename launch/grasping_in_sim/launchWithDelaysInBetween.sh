@@ -3,9 +3,9 @@
 # dependencies: timed roslaunch
 # https://github.com/MoriKen254/timed_roslaunch
 
-rosrun timed_roslaunch timed_roslaunch.sh 0 niryo_one_bringup base_world_model.launch &
+rosrun timed_roslaunch timed_roslaunch.sh 0 icclab_grasping_niryo base_world_model.launch &
 
-rosrun timed_roslaunch timed_roslaunch.sh 10 niryo_one_bringup controllers.launch &
+rosrun timed_roslaunch timed_roslaunch.sh 10 icclab_grasping_niryo controllers.launch &
 
 rosrun timed_roslaunch timed_roslaunch.sh 20 niryo_one_bringup robot_commander.launch &
 

@@ -718,12 +718,44 @@ if __name__ == "__main__":
             #pnp.set_pose_constraints(3.14, 1.0, 1.0)
             #pnp.stop_con_setup()
             #pnp.set_upright_constraints(successful_grasp.grasp_pose)pevent("Dropping object on robot")
-	        
+            ## first move ## 
+            print("!!!! HEY I AM HERE !!!!") 
+            pose_goal = geometry_msgs.msg.Pose()
+            pose_goal.position.x = successful_grasp.grasp_pose.pose.position.x 
+            pose_goal.position.y = successful_grasp.grasp_pose.pose.position.y 
+            pose_goal.position.z = 0.3
+            pose_goal.orientation.x = successful_grasp.grasp_pose.pose.orientation.x
+            pose_goal.orientation.y = successful_grasp.grasp_pose.pose.orientation.y
+            pose_goal.orientation.z = successful_grasp.grasp_pose.pose.orientation.z
+            pose_goal.orientation.w = successful_grasp.grasp_pose.pose.orientation.w
+            group.set_start_state_to_current_state()
+            group.set_goal_tolerance(0.1)
+            group.set_pose_target(pose_goal)
+            
+            plan = group.plan()
+            rospy.sleep(1)
+            cont_plan_drop = 0
+            while ((len(plan.joint_trajectory.points) == 0) and (cont_plan_drop < 10)):
+                plan = group.plan()
+                rospy.sleep(1)
+                cont_plan_drop += 1
+            if (len(plan.joint_trajectory.points) != 0):
+                pevent("Executing dropping: ")
+                result = group.execute(plan, wait=True)
+                rospy.sleep(1)
+                if result == True:
+                    #pevent("Dropping successful!")
+                    #result = gripper_client_2(-0.2)
+                    #print("Gripper opened")
+                    #group.detach_object("obj")
+                    group.stop()
+                    group.clear_pose_targets()
+            ## SECOND  MOVE ##
             print("!!!! HEY I AM HERE !!!!") 
             pose_goal = geometry_msgs.msg.Pose()
             pose_goal.position.x = -0.3 
             pose_goal.position.y = 0  
-            pose_goal.position.z = 0.4
+            pose_goal.position.z = 0.3
             pose_goal.orientation.x = successful_grasp.grasp_pose.pose.orientation.x
             pose_goal.orientation.y = successful_grasp.grasp_pose.pose.orientation.y
             pose_goal.orientation.z = successful_grasp.grasp_pose.pose.orientation.z
@@ -748,6 +780,38 @@ if __name__ == "__main__":
                     result = gripper_client_2(-0.2)
                     print("Gripper opened")
                     group.detach_object("obj")
+                    group.stop()
+                    group.clear_pose_targets()
+            ## THIRD MOVE ## 
+            print("!!!! HEY I AM HERE !!!!") 
+            pose_goal = geometry_msgs.msg.Pose()
+            pose_goal.position.x = 0.065 
+            pose_goal.position.y = 0.0
+            pose_goal.position.z = 0.207
+            pose_goal.orientation.x = 0
+            pose_goal.orientation.y = 0
+            pose_goal.orientation.z = 0
+            pose_goal.orientation.w = 1
+            group.set_start_state_to_current_state()
+            group.set_goal_tolerance(0.1)
+            group.set_pose_target(pose_goal)
+            
+            plan = group.plan()
+            rospy.sleep(1)
+            cont_plan_drop = 0
+            while ((len(plan.joint_trajectory.points) == 0) and (cont_plan_drop < 10)):
+                plan = group.plan()
+                rospy.sleep(1)
+                cont_plan_drop += 1
+            if (len(plan.joint_trajectory.points) != 0):
+                pevent("Executing dropping: ")
+                result = group.execute(plan, wait=True)
+                rospy.sleep(1)
+                if result == True:
+                    #pevent("Dropping successful!")
+                    #result = gripper_client_2(-0.2)
+                    #print("Gripper opened")
+                    #group.detach_object("obj")
                     group.stop()
                     group.clear_pose_targets()
 

@@ -19,7 +19,7 @@
 		
     <!-- The box model | might need to be refractored -->
     <model name="my_model">
-			<pose>0.3 -0.06 0 0 0 0</pose>
+			<pose>0.3 0 0 0 0 0</pose>
 			<static>false</static>
 			<link name="box">
 				<inertial>

@@ -37,6 +37,7 @@
     <param name="voxelize" value="true"/>
     <param name="remove_outliers" value="false"/>
     <rosparam param="workspace"> [-2.0, 2.0, -2.0, 2.0, -2.0, 2.0] </rosparam>
+    <!--rosparam param="camera_position"> [0.611237, 0.433886, 0.443974] </rosparam-->
     <rosparam param="camera_position"> [0, 0, 0] </rosparam>
             
     <!-- General parameters -->
@@ -49,7 +50,9 @@
     
     <!-- Filtering of grasp candidates --> 
     <param name="filter_grasps" value="true" /> <!-- on workspace and robot hand aperture -->
-    <rosparam param="workspace_grasps"> [-0.5, 0.5, -0.5, 0.5, -0.5, 0.5] </rosparam>
+    <!--rosparam param="workspace_grasps"> [-0.5, 0.5, -0.5, 0.5, -0.5, 0.5] </rosparam-->
+    <rosparam param="workspace_grasps"> [-1.0, 1.0, -1.0, 1.0, -1.0, 1.0] </rosparam>
+   
     <param name="filter_half_antipodal" value="false"/> <!-- on half antipodal -->
     
     <!-- Grasp image creation -->
@@ -65,6 +68,6 @@
     <param name="max_aperture" value="0.025" />
     <param name="num_selected" value="30" />
         
-	</node>
+</node>
   
 </launch>

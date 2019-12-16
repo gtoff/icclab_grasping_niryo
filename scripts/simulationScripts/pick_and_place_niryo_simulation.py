@@ -62,8 +62,8 @@ class GpdPickPlace(object):
     #grasp_offset = -0.07
     grasp_offset = -0.01
     #grasp_offset = 0
-    grasp_offset_cartesian = -0.05 # -0.05
-    #grasp_offset_cartesian = 0.06
+    #grasp_offset_cartesian = -0.05 # -0.05
+    grasp_offset_cartesian = -0.04
     finger_indexes = None
     con_joints_indexes = None
     joint1_con = 0
@@ -81,7 +81,6 @@ class GpdPickPlace(object):
             self.marker_publisher = rospy.Publisher('visualization_marker_array', MarkerArray, queue_size=1)
         self.p = PickPlaceInterface(group="arm", ee_group="gripper", verbose=True, ns="")
         self.tf = tf.TransformListener()
-        print "I am here!!! "
     def grasp_callback(self, msg):
         self.grasps = msg.grasps
         self.grasps_received = True
@@ -271,18 +270,6 @@ class GpdPickPlace(object):
                 self.show_grasp_pose(self.marker_publisher, single_grasp.grasp_pose)
                 rospy.sleep(1)
             pevent("Planning grasp:")
-#            ### Debug!!!
-#            pevent("THIS IS THE DEBUG POSE")
-#            single_grasp.grasp_pose.pose.position.x = 0.25
-#            single_grasp.grasp_pose.pose.position.y = 0
-#            single_grasp.grasp_pose.pose.position.z = 0.09
-#            
-#            single_grasp.grasp_pose.pose.orientation.x = 0 
-#            single_grasp.grasp_pose.pose.orientation.y = 0
-#            single_grasp.grasp_pose.pose.orientation.z = 0
-#            single_grasp.grasp_pose.pose.orientation.w = 1
-#            # End Debug
-            
             pprint(single_grasp.grasp_pose)
             quat = [single_grasp.grasp_pose.pose.orientation.x, single_grasp.grasp_pose.pose.orientation.y, single_grasp.grasp_pose.pose.orientation.z, single_grasp.grasp_pose.pose.orientation.w]
     
@@ -322,7 +309,7 @@ class GpdPickPlace(object):
                         waypoints_result = group.execute(plan, wait=True)
                         if waypoints_result == True:
                             pevent("Grasp successful!")
-                            attach_link = "gripper_servo_link"
+                            attach_link = "hand_link"
                             touch_links = ["gripper_left_finger_base_link","gripper_right_finger_base_link"]
                             #touch_links = ["gripper_base_link","gripper_left_finger_base_link","gripper_left_finger_link","gripper_right_finger_base_link","gripper_right_finger_link"]
                             group.attach_object("obj", attach_link, touch_links)
@@ -363,7 +350,7 @@ class GpdPickPlace(object):
             pevent("Planning grasp:")
             pevent("Hey!! I am in the function pick two steps!")
             ### DEBUG  ###
-            single_grasp.grasp_pose.pose.position.z = single_grasp.grasp_pose.pose.position.z + 0.02
+            single_grasp.grasp_pose.pose.position.z = single_grasp.grasp_pose.pose.position.z + 0.005 
             ### DEBUG  ^^### 
             pprint(single_grasp.grasp_pose)
             ### Debug ###
@@ -421,8 +408,8 @@ class GpdPickPlace(object):
                         plan2 = group.go()
 #                        if (plan2 == True):
 #                            pevent("Grasp successful!")
-#                            #attach_link = "gripper_servo_link"
-#                            attach_link = "gripper_servo_link"
+#                            #attach_link = "hand_link"
+#                            attach_link = "hand_link"
 #                            touch_links = ["gripper_left_finger_base_link","gripper_right_finger_base_link"]
 #                            #touch_links = ["gripper_base_link","gripper_left_finger_base_link","gripper_left_finger_link","gripper_right_finger_base_link","gripper_right_finger_link"]
 #                            group.attach_object("obj", attach_link, touch_links)
@@ -683,7 +670,7 @@ if __name__ == "__main__":
     group.set_planner_id("SPARStwo")
     group.set_max_velocity_scaling_factor(0.05)
     group.set_goal_orientation_tolerance(0.01)
-    group.set_planning_time(7)
+    group.set_planning_time(5)
     group.allow_replanning(True)
     planning = PlanningSceneInterface("ground_link", ns="")
     planning.clear()
@@ -723,25 +710,58 @@ if __name__ == "__main__":
             result = gripper_client_2(0.2)
             print("Gripper closed")
             rospy.sleep(10)
-            time.sleep(20)
-            pnp.start_grasp_check()
+            #time.sleep(20)
+            #pnp.start_grasp_check()
             #pnp.remove_pose_constraints()
             #pnp.start_con_setup()
             #rospy.sleep(1)
             #pnp.set_pose_constraints(3.14, 1.0, 1.0)
             #pnp.stop_con_setup()
-            #pnp.set_upright_constraints(successful_grasp.grasp_pose)
-            while (pnp.drop_obj_on_robot(successful_grasp) == False):
-                print("Object placing failed!")
-            if success == False:
-                objects_grasped_not_placed += 1
+            #pnp.set_upright_constraints(successful_grasp.grasp_pose)pevent("Dropping object on robot")
+	        
+            print("!!!! HEY I AM HERE !!!!") 
+            pose_goal = geometry_msgs.msg.Pose()
+            pose_goal.position.x = -0.3 
+            pose_goal.position.y = 0  
+            pose_goal.position.z = 0.4
+            pose_goal.orientation.x = successful_grasp.grasp_pose.pose.orientation.x
+            pose_goal.orientation.y = successful_grasp.grasp_pose.pose.orientation.y
+            pose_goal.orientation.z = successful_grasp.grasp_pose.pose.orientation.z
+            pose_goal.orientation.w = successful_grasp.grasp_pose.pose.orientation.w
+            group.set_start_state_to_current_state()
+            group.set_goal_tolerance(0.1)
+            group.set_pose_target(pose_goal)
+
+            plan = group.plan()
+            rospy.sleep(1)
+            cont_plan_drop = 0
+            while ((len(plan.joint_trajectory.points) == 0) and (cont_plan_drop < 10)):
+                plan = group.plan()
+                rospy.sleep(1)
+                cont_plan_drop += 1
+            if (len(plan.joint_trajectory.points) != 0):
+                pevent("Executing dropping: ")
+                result = group.execute(plan, wait=True)
+                rospy.sleep(1)
+                if result == True:
+                    pevent("Dropping successful!")
+                    result = gripper_client_2(-0.2)
+                    print("Gripper opened")
+                    group.detach_object("obj")
+                    group.stop()
+                    group.clear_pose_targets()
+
+#	    while (pnp.drop_obj_on_robot(successful_grasp) == False):
+#                print("Object placing failed!")
+#            if success == False:
+#                objects_grasped_not_placed += 1
 
 
-            check_gripper_closed = pnp.stop_grasp_check()
-            if(check_gripper_closed == False):
-                succesfull_objects_placements += 1
-            else:
-                objects_grasped_lost += 1
+#            check_gripper_closed = pnp.stop_grasp_check()
+#            if(check_gripper_closed == False):
+#                succesfull_objects_placements += 1
+#            else:
+#                objects_grasped_lost += 1
 
         else:
             print("Grasp NOT performed")

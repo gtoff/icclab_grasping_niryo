@@ -16,7 +16,7 @@
   
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <!--arg name="world_name" value="$(find niryo_one_gazebo)/worlds/niryo_one.world"/-->
-    <arg name="world_name" value="$(find icclab_grasping_niryo)/worlds/niryo_one.world"/>
+    <arg name="world_name" value="$(find icclab_grasping_niryo)/worlds/niryo_one_two_items.world"/>
     <arg name="verbose" value="true" />
     <arg name="debug" value="$(arg debug)" />
     <arg name="gui" value="$(arg gui)" />

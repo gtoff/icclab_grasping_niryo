@@ -719,7 +719,7 @@ if __name__ == "__main__":
             #pnp.stop_con_setup()
             #pnp.set_upright_constraints(successful_grasp.grasp_pose)pevent("Dropping object on robot")
             ## first move ## 
-            print("!!!! HEY I AM HERE !!!!") 
+            print("!!!! FIRST MOVE STARTS !!!!") 
             pose_goal = geometry_msgs.msg.Pose()
             pose_goal.position.x = successful_grasp.grasp_pose.pose.position.x 
             pose_goal.position.y = successful_grasp.grasp_pose.pose.position.y 
@@ -751,7 +751,7 @@ if __name__ == "__main__":
                     group.stop()
                     group.clear_pose_targets()
             ## SECOND  MOVE ##
-            print("!!!! HEY I AM HERE !!!!") 
+            print("!!!! SECOND MOVE STARTS !!!!") 
             pose_goal = geometry_msgs.msg.Pose()
             pose_goal.position.x = -0.3 
             pose_goal.position.y = 0  
@@ -761,7 +761,7 @@ if __name__ == "__main__":
             pose_goal.orientation.z = successful_grasp.grasp_pose.pose.orientation.z
             pose_goal.orientation.w = successful_grasp.grasp_pose.pose.orientation.w
             group.set_start_state_to_current_state()
-            group.set_goal_tolerance(0.1)
+            group.set_goal_tolerance(0.05)
             group.set_pose_target(pose_goal)
 
             plan = group.plan()
@@ -793,7 +793,7 @@ if __name__ == "__main__":
             pose_goal.orientation.z = 0
             pose_goal.orientation.w = 1
             group.set_start_state_to_current_state()
-            group.set_goal_tolerance(0.1)
+            group.set_goal_tolerance(0.05)
             group.set_pose_target(pose_goal)
             
             plan = group.plan()

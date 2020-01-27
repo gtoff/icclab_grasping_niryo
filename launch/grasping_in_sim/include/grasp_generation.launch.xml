@@ -1,7 +1,7 @@
 <launch>
   
   <!-- Load hand geometry parameters -->  
-  <include file="$(find gpd)/launch/hand_geometry.launch">
+  <include file="$(find icclab_grasping_niryo)/launch/grasping_in_sim/include/hand_geometry.launch">
     <arg name="node" value="detect_grasps" />
   </include>
   

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import sys
+sys.path.append('/home/ros/catkin_ws/src/icclab_grasping_niryo/scripts/')
 import rospy
 import numpy as np
 import copy
@@ -20,7 +22,6 @@ from moveit_python.geometry import rotate_pose_msg_by_euler_angles, translate_po
 from tf.transformations import *
 import geometry_msgs.msg #for pose2 simple
 import math
-import sys
 import moveit_commander
 import moveit_msgs.msg
 import geometry_msgs.msg

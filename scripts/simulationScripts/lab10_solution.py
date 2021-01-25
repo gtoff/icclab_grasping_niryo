@@ -372,15 +372,15 @@ if __name__ == "__main__":
             print("Gripper closed")
             rospy.sleep(10)
             ## first move ## 
-           # print("!!!! FIRST MOVE STARTS !!!!")
-           # move1 = pnp.move_to(successful_grasp.grasp_pose.pose.position.x,
-           # successful_grasp.grasp_pose.pose.position.y,
-           #  0.27,
-           # successful_grasp.grasp_pose.pose.orientation.x,
-           # successful_grasp.grasp_pose.pose.orientation.y,
-           # successful_grasp.grasp_pose.pose.orientation.z,
-           # successful_grasp.grasp_pose.pose.orientation.w,
-           # False)
+            print("!!!! FIRST MOVE STARTS !!!!")
+            move1 = pnp.move_to(successful_grasp.grasp_pose.pose.position.x,
+            successful_grasp.grasp_pose.pose.position.y,
+             0.27,
+            successful_grasp.grasp_pose.pose.orientation.x,
+            successful_grasp.grasp_pose.pose.orientation.y,
+            successful_grasp.grasp_pose.pose.orientation.z,
+            successful_grasp.grasp_pose.pose.orientation.w,
+            False)
             ## SECOND  MOVE ##
             print("!!!! SECOND MOVE STARTS !!!!") 
             move2 = pnp.move_to(-0.3,

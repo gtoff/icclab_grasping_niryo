@@ -1,12 +1,10 @@
 #!/usr/bin/env python
-
 import sys
 sys.path.append('/home/ros/catkin_ws/src/icclab_grasping_niryo/scripts/')
 import rospy
 import numpy as np
 import copy
 import tf
-import datetime
 import gc
 from tools import *
 from pprint import pprint
@@ -46,7 +44,6 @@ from pointcloud_operations import create_mesh_and_save
 from sensor_msgs import point_cloud2
 from show_pose_marker import place_marker_at_pose
 from std_srvs.srv import Empty
-client = None
 
 class GpdPickPlace(object):
     grasps = []
@@ -60,7 +57,6 @@ class GpdPickPlace(object):
     joint2_con = 0
     joint3_con = 0
     gripper_closed = False
-    global objects_grasped_not_placed
     grasps_received = False
 
     def __init__(self, mark_pose=False):
@@ -178,9 +174,6 @@ class GpdPickPlace(object):
             pevent("Planning grasp:")
             single_grasp.grasp_pose.pose.position.z = single_grasp.grasp_pose.pose.position.z + 0.005 
             pprint(single_grasp.grasp_pose)
-            quat = [single_grasp.grasp_pose.pose.orientation.x, single_grasp.grasp_pose.pose.orientation.y, single_grasp.grasp_pose.pose.orientation.z, single_grasp.grasp_pose.pose.orientation.w]
-            
-            rads = tf.transformations.euler_from_quaternion(quat)
             group.set_start_state_to_current_state()
             group.set_pose_target(single_grasp.grasp_pose.pose)
             plan = group.plan()
@@ -305,23 +298,6 @@ class GpdPickPlace(object):
                 group.stop()
                 group.clear_pose_targets()
 
-    def wait_for_pcl_and_save(self):
-        pinfo("Subscribing to pointcloud to generate pointcloud")
-        self.obj_pc_subscriber = rospy.Subscriber("/cloud_indexed_pc_only", sensor_msgs.msg.PointCloud2,
-                                                  self.obj_pointcloud_callback_pcd)
-
-    def obj_pointcloud_callback_pcd(self, msg):
-        pinfo("Pointcloud received")
-        cloud = []
-        for p in point_cloud2.read_points(msg, skip_nans=True):
-            cloud.append([p[0], p[1], p[2]])
-        create_pcd_and_save(cloud)
-        pinfo("PCD generated")
-        self.obj_pc_subscriber.unregister()
-
-    def create_pcd_and_save(cloud):
-        np_cloud = np.asarray(cloud)
-
     def wait_for_mesh_and_save(self):
       pinfo("Subscribing to pointcloud to generate mesh")
       self.obj_pc_subscriber = rospy.Subscriber("/cloud_indexed_pc_only", sensor_msgs.msg.PointCloud2 , self.obj_pointcloud_callback)
@@ -362,7 +338,6 @@ class GpdPickPlace(object):
         return self.gripper_closed
 
 if __name__ == "__main__":
-    start_time = datetime.datetime.now()
     rospy.init_node("gpd_pick_and_place",anonymous=True)
     tf_listener_ = TransformListener()
     pnp = GpdPickPlace(mark_pose=True)
@@ -375,17 +350,12 @@ if __name__ == "__main__":
     planning.clear()
     rospy.sleep(1)
     num_objects = 3 
-    succesfull_objects_placements = 0
-    objects_grasped_lost = 0
-    objects_grasped_not_placed = 0
     rospy.wait_for_service('/clear_octomap')
     clear_octomap = rospy.ServiceProxy('/clear_octomap', Empty)
     clear_octomap()
 
     for r in range (0, num_objects):
         planning.clear()
-        clear_octomap()
-	# We have to add a check, so that this is called only if the initial_pose was successful
         call_pointcloud_filter_service()
         pnp.wait_for_mesh_and_save()
     	
@@ -402,15 +372,15 @@ if __name__ == "__main__":
             print("Gripper closed")
             rospy.sleep(10)
             ## first move ## 
-            print("!!!! FIRST MOVE STARTS !!!!")
-            move1 = pnp.move_to(successful_grasp.grasp_pose.pose.position.x,
-            successful_grasp.grasp_pose.pose.position.y,
-            0.27,
-            successful_grasp.grasp_pose.pose.orientation.x,
-            successful_grasp.grasp_pose.pose.orientation.y,
-            successful_grasp.grasp_pose.pose.orientation.z,
-            successful_grasp.grasp_pose.pose.orientation.w,
-            False)
+           # print("!!!! FIRST MOVE STARTS !!!!")
+           # move1 = pnp.move_to(successful_grasp.grasp_pose.pose.position.x,
+           # successful_grasp.grasp_pose.pose.position.y,
+           #  0.27,
+           # successful_grasp.grasp_pose.pose.orientation.x,
+           # successful_grasp.grasp_pose.pose.orientation.y,
+           # successful_grasp.grasp_pose.pose.orientation.z,
+           # successful_grasp.grasp_pose.pose.orientation.w,
+           # False)
             ## SECOND  MOVE ##
             print("!!!! SECOND MOVE STARTS !!!!") 
             move2 = pnp.move_to(-0.3,

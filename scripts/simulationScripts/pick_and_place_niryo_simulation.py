@@ -589,7 +589,7 @@ if __name__ == "__main__":
     group = moveit_commander.MoveGroupCommander(group_name, robot_description="/robot_description", ns="")
     #group.set_planner_id("BiTRRT")
     group.set_planner_id("SPARStwo")
-    group.set_max_velocity_scaling_factor(0.05)
+    group.set_max_velocity_scaling_factor(0.5)
     group.set_goal_orientation_tolerance(0.01)
     group.set_planning_time(5)
     group.allow_replanning(True)

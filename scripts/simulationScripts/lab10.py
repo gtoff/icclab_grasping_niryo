@@ -233,59 +233,11 @@ class GpdPickPlace(object):
       self.obj_pc_subscriber.unregister()
 
 if __name__ == "__main__":
-    rospy.init_node("gpd_pick_and_place",anonymous=True)
-    tf_listener_ = TransformListener()
-    pnp = GpdPickPlace(mark_pose=True)
-    group_name = "arm"
-    group = moveit_commander.MoveGroupCommander(group_name, robot_description="/robot_description", ns="")
-    group.set_goal_orientation_tolerance(0.01)
-    group.set_planning_time(5)
-    group.allow_replanning(True)
-    planning = PlanningSceneInterface("ground_link", ns="")
-    planning.clear()
-    rospy.sleep(1)
-    num_objects = 3 
-    rospy.wait_for_service('/clear_octomap')
-    clear_octomap = rospy.ServiceProxy('/clear_octomap', Empty)
-    clear_octomap()
+#Inizialize ROS node, GpdPickPlace object and move group
 
-    for r in range (0, num_objects):
-        planning.clear()
-        call_pointcloud_filter_service()
-        pnp.wait_for_mesh_and_save()
-    	
-	# Wait for grasps from gpd, wrap them into Grasp msg format and start picking
-        pnp.grasps_received = False
-        result = gripper_client_2(-0.2)
-        print("Gripper opened")
-        selected_grasps = pnp.get_gpd_grasps()
-        formatted_grasps = pnp.generate_grasp_msgs(selected_grasps)
-        successful_grasp = pnp.pick_two_steps(formatted_grasps, verbose=True)
-        print "SUCCESSFUL GRASP IS:", successful_grasp
-        if successful_grasp is not None:
-            result = gripper_client_2(0.2)
-            print("Gripper closed")
-            rospy.sleep(10)
-            ## first move ## 
-            print("!!!! FIRST MOVE STARTS !!!!")
-            move1 = pnp.move_to(successful_grasp.grasp_pose.pose.position.x,
-            successful_grasp.grasp_pose.pose.position.y, 0.27,
-            successful_grasp.grasp_pose.pose.orientation.x,
-            successful_grasp.grasp_pose.pose.orientation.y,
-            successful_grasp.grasp_pose.pose.orientation.z,
-            successful_grasp.grasp_pose.pose.orientation.w,
-            False)
-            ## SECOND  MOVE ##
-            print("!!!! SECOND MOVE STARTS !!!!") 
-            move2 = pnp.move_to(-0.3,0,0.3,successful_grasp.grasp_pose.pose.orientation.x,
-            successful_grasp.grasp_pose.pose.orientation.y,
-            successful_grasp.grasp_pose.pose.orientation.z,
-            successful_grasp.grasp_pose.pose.orientation.w,
-            True)
+#Write code for pointcloud filtering, object detection and mesh creation
 
-            ## THIRD MOVE ## 
-            print("!!!! THIRD MOVE STARTS !!!!") 
-            move3 = pnp.move_to(0.065, 0, 0.207, 0, 0, 0, 1, False)
-        else:
-            print("Grasp NOT performed")
+#Wait for grasps from gpd, wrap them into Grasp msg format and start moving arm and grasping with the gripper 
+
+#If pick was succesful move arm to drop and then repeat the operations until all objects are picked
 

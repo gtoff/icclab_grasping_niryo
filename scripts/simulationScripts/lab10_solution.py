@@ -47,10 +47,8 @@ from std_srvs.srv import Empty
 
 class GpdPickPlace(object):
     grasps = []
-    grasps_cartesian = []
     mark_pose = True
-    grasp_offset = -0.01
-    grasp_offset_cartesian = -0.04
+    grasp_offset = -0.04
     finger_indexes = None
     con_joints_indexes = None
     joint1_con = 0
@@ -85,9 +83,8 @@ class GpdPickPlace(object):
         return self.grasps
 
     def generate_grasp_msgs(self, selected_grasps):
-            self.grasps_cartesian = []
-            formatted_grasps_cartesian = []
-            tot_grasps = len(selected_grasps)
+            self.grasps = []
+            formatted_grasps = []
             cont = 0
             filtered_orientation = 0
             for i in range(0, len(selected_grasps)):
@@ -102,26 +99,26 @@ class GpdPickPlace(object):
                 
                 tf_listener_.waitForTransform('/camera_optical_frame', '/base_link', rospy.Time(), rospy.Duration(2.0))
                 quat = self.trans_matrix_to_quaternion(selected_grasps[i])
-                gp_cartesian = PoseStamped()
-                gp_cartesian.header.frame_id = "camera_optical_frame"
-                gp_cartesian.pose.position.x = selected_grasps[i].surface.x + self.grasp_offset_cartesian * selected_grasps[i].approach.x
-                gp_cartesian.pose.position.y = selected_grasps[i].surface.y + self.grasp_offset_cartesian * selected_grasps[i].approach.y
-                gp_cartesian.pose.position.z = selected_grasps[i].surface.z + self.grasp_offset_cartesian * selected_grasps[i].approach.z
-                gp_cartesian.pose.orientation.x = float(quat.elements[1])
-                gp_cartesian.pose.orientation.y = float(quat.elements[2])
-                gp_cartesian.pose.orientation.z = float(quat.elements[3])
-                gp_cartesian.pose.orientation.w = float(quat.elements[0])
+                gp = PoseStamped()
+                gp.header.frame_id = "camera_optical_frame"
+                gp.pose.position.x = selected_grasps[i].surface.x + self.grasp_offset * selected_grasps[i].approach.x
+                gp.pose.position.y = selected_grasps[i].surface.y + self.grasp_offset * selected_grasps[i].approach.y
+                gp.pose.position.z = selected_grasps[i].surface.z + self.grasp_offset * selected_grasps[i].approach.z
+                gp.pose.orientation.x = float(quat.elements[1])
+                gp.pose.orientation.y = float(quat.elements[2])
+                gp.pose.orientation.z = float(quat.elements[3])
+                gp.pose.orientation.w = float(quat.elements[0])
 
-		translated_pose = tf_listener_.transformPose("ground_link", gp_cartesian)
-                g_cartesian = Grasp ()
-                g_cartesian.id = "cart"
-                g_cartesian.grasp_pose = translated_pose 
-                g_cartesian.allowed_touch_objects = ["<octomap>","obj"]
-                formatted_grasps_cartesian.append(g_cartesian)
+		translated_pose = tf_listener_.transformPose("ground_link", gp)
+                g = Grasp ()
+                g.id = "grasp_id"
+                g.grasp_pose = translated_pose 
+                g.allowed_touch_objects = ["<octomap>","obj"]
+                formatted_grasps.append(g)
 
             # Sort grasps using z (get higher grasps first)
-            formatted_grasps_cartesian.sort(key=lambda grasp: grasp.grasp_pose.pose.position.z, reverse=True)
-	    return formatted_grasps_cartesian
+            formatted_grasps.sort(key=lambda grasp: grasp.grasp_pose.pose.position.z, reverse=True)
+	    return formatted_grasps
 
     def trans_matrix_to_quaternion(self, grasp):
         r = np.array([[grasp.approach.x, grasp.binormal.x, grasp.axis.x],
@@ -129,7 +126,7 @@ class GpdPickPlace(object):
                       [grasp.approach.z, grasp.binormal.z, grasp.axis.z]])
         return Quaternion(matrix=r)
 
-    def pick_two_steps(self, grasps_list_cartesian, verbose=False):
+    def pick_two_steps(self, grasps_list, verbose=False):
         pevent("Two step pick sequence started")
         
 	# Add object mesh to planning scene
@@ -137,7 +134,7 @@ class GpdPickPlace(object):
 	group.set_goal_tolerance(0.01)
         group.set_planning_time(5)
         cont_c = 0
-        for single_grasp in grasps_list_cartesian:
+        for single_grasp in grasps_list:
             if self.mark_pose:
                 self.show_grasp_pose(self.marker_publisher, single_grasp.grasp_pose)
                 rospy.sleep(1)
@@ -159,9 +156,9 @@ class GpdPickPlace(object):
                         group.clear_path_constraints()
                         group.set_start_state_to_current_state()
                         if self.mark_pose:
-                            self.show_grasp_pose(self.marker_publisher, grasps_list_cartesian[cont_c].grasp_pose)
+                            self.show_grasp_pose(self.marker_publisher, grasps_list[cont_c].grasp_pose)
                             rospy.sleep(1)
-                        group.set_pose_target(grasps_list_cartesian[cont_c].grasp_pose.pose)
+                        group.set_pose_target(grasps_list[cont_c].grasp_pose.pose)
                         plan2 = group.go()
                         return single_grasp
                     else:
@@ -274,9 +271,9 @@ if __name__ == "__main__":
         result = gripper_client_2(-0.2)
         print("Gripper opened")
         selected_grasps = pnp.get_gpd_grasps()
-        formatted_grasps_cartesian = pnp.generate_grasp_msgs(selected_grasps)
-        successful_grasp = pnp.pick_two_steps(formatted_grasps_cartesian, verbose=True)
-        print "SUCCES GRASP IS:", successful_grasp
+        formatted_grasps = pnp.generate_grasp_msgs(selected_grasps)
+        successful_grasp = pnp.pick_two_steps(formatted_grasps, verbose=True)
+        print "SUCCESSFUL GRASP IS:", successful_grasp
         if successful_grasp is not None:
             result = gripper_client_2(0.2)
             print("Gripper closed")

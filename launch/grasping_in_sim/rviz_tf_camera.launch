@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find niryo_one_description)/config/default_config.rviz"/>
+  
+  <include file="$(find icclab_grasping_niryo)/launch/grasping_in_sim/ground_to_camera.launch"/>
+  
+</launch>

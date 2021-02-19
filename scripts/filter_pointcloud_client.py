@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import rospy
@@ -12,7 +12,7 @@ def call_pointcloud_filter_service():
         resp1 = service_proxy()
         print "Service invoked"
         return resp1
-    except rospy.ServiceException, e:
+    except rospy.ServiceException as e:
         print "Service call failed: %s"%e
 
 if __name__ == "__main__":

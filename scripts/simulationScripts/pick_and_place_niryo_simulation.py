@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 sys.path.append('/home/ros/catkin_ws/src/icclab_grasping_niryo/scripts/')

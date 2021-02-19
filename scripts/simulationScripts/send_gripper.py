@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 # Send a value to change the opening of the Robotiq gripper using an action
 #

@@ -89,7 +89,7 @@
   <exec_depend>tf2_ros</exec_depend>
   <exec_depend>tf2_eigen</exec_depend>
   <exec_depend>tf2_geometry_msgs</exec_depend>
-  <exec_depend>ar_track_alvar</exec_depend>
+  <!-- <exec_depend>ar_track_alvar</exec_depend> -->
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

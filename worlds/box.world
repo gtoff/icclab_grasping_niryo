@@ -11,7 +11,7 @@
     <include>
       <uri>model://kinect_ros</uri>
       <name>kinect_camera_link</name>
-      <pose>0.611237 0.433886 0.443974 -0.070526 0.697037 -2.089600</pose>
+      <pose>0.664309 0.141670 0.405474 0.025043 0.711576 -2.936789 </pose>
     </include>
 
     <physics type="ode">

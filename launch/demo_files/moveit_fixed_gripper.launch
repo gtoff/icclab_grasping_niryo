@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf.xacro"/>
+  <!-- robot commander -->
+  <include file="$(find niryo_one_bringup)/launch/robot_commander.launch"/>
+</launch>

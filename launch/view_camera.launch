@@ -3,7 +3,7 @@
   <arg name="execute_on_niryo_one_raspberry_pi_image" value="false"/>
   <arg name="urdf_without_meshes" default="false" />
   <arg name="camera" default="camera"/>
-  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find niryo_one_description)/urdf/v2/niryo_one.urdf.xacro" unless="$(arg urdf_without_meshes)"/>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf.xacro" unless="$(arg urdf_without_meshes)"/>
 
  	<!--   <node pkg="tf" type="static_transform_publisher" name="camera_link_broadcaster" args="0.395 -0.03 0.36 3.14 1.57 0 base_link camera_link 100" /> -->
     	

@@ -5,8 +5,9 @@
   <include file="$(find icclab_grasping_niryo)/launch/grasping_in_sim/ground_to_camera.launch"/>
   
   <!-- run grasp detection -->
-	<include file="$(find icclab_grasping_niryo)/launch/grasping_in_sim/include/grasp_generation.launch.xml"/>
-  
+  <!--	<include file="$(find icclab_grasping_niryo)/launch/grasping_in_sim/include/grasp_generation.launch.xml"/>
+  -->
+<include file="$(find gpd_ros)/launch/robotiq_grasp_generation.launch"/>
   <!-- run point cloud filtering--> 
 	<node name="pointcloud_filtering" pkg="irlab_point_cloud_filtering" type="point_cloud_filtering_server" args="/camera/depth/points" respawn="true" output="screen"/>
 

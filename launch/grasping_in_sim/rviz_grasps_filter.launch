@@ -11,5 +11,5 @@
 	<node name="pointcloud_filtering" pkg="irlab_point_cloud_filtering" type="point_cloud_filtering_server" args="/camera/depth/points" respawn="true" output="screen"/>
 
 	<!-- import octomap sensors -->
-	<!-- <include ns="move_group"  file="$(find icclab_grasping_niryo)/launch/grasping_in_sim/include/sensor_manager.launch.xml"/> -->
+	 <include ns="move_group"  file="$(find icclab_grasping_niryo)/launch/grasping_in_sim/include/sensor_manager.launch.xml"/> 
 </launch>

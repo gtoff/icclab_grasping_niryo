@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+
+<!-- grasp generation with GPD-->  
+<include file="$(find gpd_ros)/launch/niryo_grasp_generation.launch"/>
+	
+<!-- run point cloud filtering and clustering server--> 
+<node name="pointcloud_filtering" pkg="irlab_point_cloud_filtering" type="point_cloud_filtering_server" respawn="true" output="screen"/>
+
+
+</launch>

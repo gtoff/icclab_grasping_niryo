@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<launch>
-	
-  <node pkg="icclab_grasping_niryo" type="pick_and_place_niryo_simulation.py" name="gpd_pick_and_place" output="screen" />
-</launch>

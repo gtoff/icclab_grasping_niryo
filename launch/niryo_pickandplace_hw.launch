@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <!-- moveit rviz fake_gripper-->
+  <include file="$(find icclab_grasping_niryo)/launch/include/moveit_rviz_fakegripper.launch"/>
+  
+  <!--  <node name="pcl_throttler" type="throttle" pkg="topic_tools"
+  args="messages /camera/depth/points 0.37 /camera/depth/points_throttled" />  -->
+<node name = "pcl_dropper" type="drop" pkg="topic_tools" args= "/camera/depth_registered/points 9 10 /camera/depth/points_throttled" />	
+	
+
+  <!-- filtering and clustering with service calls-->
+  <include file="$(find icclab_grasping_niryo)/launch/include/grasps_filter_hw.launch"/>
+
+  
+<!-- camera position estimation-->
+  <include file="$(find icclab_grasping_niryo)/launch/include/ar_track_bundle.launch"/> 
+  
+<!-- import octomap sensors -->
+<!--	<include ns="move_group"  file="$(find icclab_grasping_niryo)/config/sensor_manager.launch.xml"/>  -->
+
+
+</launch>

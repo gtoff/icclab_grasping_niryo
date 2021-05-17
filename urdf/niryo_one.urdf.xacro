@@ -54,19 +54,19 @@
 	<xacro:include filename="$(find niryo_one_description)/urdf/gazebo/niryo_one.transmission.xacro" />
 
 	<!-- Gripper -->	
-	<xacro:include filename="$(find niryo_one_description)/urdf/v2/gripper/niryo_gripper_1.urdf.xacro" />  
+	<xacro:include filename="$(find icclab_grasping_niryo)/urdf/niryo_gripper_1.urdf.xacro" />  
 	<!--xacro:include filename="$(find niryo_one_description)/urdf/v2/gripper/niryo_gripper_2.urdf.xacro" /--> 
 
   
 	<!-- Links -->
 
     <link name="ground_link">
-      <collision>
+	    <!--  <collision>
          <origin xyz="0 0 0" rpy="0 0 0" />
          <geometry>
             <box size="1.5 1.5 0.001" />
          </geometry>
-       </collision>
+	    </collision> -->
     </link>
 
     <link name="base_link">

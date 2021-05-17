@@ -45,7 +45,12 @@
         <param name="rate_publish_state" type="double" value="5.0" />
     </group>
 
+	    
     <!-- load URDF -->
+   <!-- COLLISION GROUND PARAM -->
+    <arg name="collision_ground"  value="$(arg collision_ground)"/>
+    <group if="$(eval collision_ground == false)"> 
+    
     <!-- on Raspberry Pi 3 (ARM architecture) we get a segfault when using visual and collision stuff -->
     <param name="urdf_without_meshes" value="$(arg urdf_without_meshes)" />
     <group if="$(eval hardware_version == 1)">
@@ -55,10 +60,16 @@
     </group>
     <group if="$(eval hardware_version == 2)">
         <param name="robot_description" command="$(find xacro)/xacro --inorder $(find niryo_one_description)/urdf/v2/without_mesh_niryo_one.urdf.xacro" if="$(arg urdf_without_meshes)"/>
-    
-   <param name="robot_description" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf.xacro" unless="$(arg urdf_without_meshes)"/>
-    <param name="robot_description_tf2" command="$(find xacro)/xacro --inorder $(find niryo_one_description)/urdf/v2/niryo_one.urdf.xacro" />
+	<param name="robot_description" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf.xacro" unless="$(arg urdf_without_meshes)"/>
+	<param name="robot_description_tf2" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf.xacro" />
+   <!-- <param name="robot_description_tf2" command="$(find xacro)/xacro --><!--inorder $(find niryo_one_description)/urdf/v2/niryo_one.urdf.xacro" /> -->
     </group>
+    </group>
+    <group if="$(eval collision_ground == true)">  
+	    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf_collisionground.xacro"/>
+	    <param name="robot_description_tf2" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf.xacro" />
+    </group>
+
 </launch>
 
 

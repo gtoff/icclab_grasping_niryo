@@ -25,8 +25,8 @@ if __name__ == '__main__':
     try:
         # Get the angle from the command line
         parser = argparse.ArgumentParser()
-        parser.add_argument("--value", type=float, default="0.2",
-                            help="Value betwewen 0.2 (open) 0 (closed)")
+        parser.add_argument("--value", type=float, default="-0.2",
+                            help="Value betwewen -0.2 (open) 0 (closed)")
         args = parser.parse_args()
         gripper_value = args.value
         # Start the ROS node

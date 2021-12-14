@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-	   <!-- COLLISION GROUND PARAM -->
-    <arg name="collision_ground"  value="$(arg collision_ground)"/>
+	<!-- COLLISION GROUND PARAM -->
+  <arg name="collision_ground"  value="$(arg collision_ground)"/>
 	<param name="robot_description" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf_collisionground.xacro" if="$(arg collision_ground)"/>
 	<param name="robot_description" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf.xacro" unless="$(arg collision_ground)"/> 
  
   <!-- robot commander -->
   <include file="$(find niryo_one_bringup)/launch/robot_commander.launch"/>
-
   <node pkg="icclab_grasping_niryo" type="pub_fake_gripper_position.sh" name="fake_gripper"/> 
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"/>
-
-   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find icclab_grasping_niryo)/config/niryo_pickandplace.rviz"/>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find icclab_grasping_niryo)/config/niryo_pickandplace.rviz"/>
 
 </launch>

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-   <!-- COLLISION GROUND PARAM -->
-        <arg name="collision_ground"   default="false"/>
+  <!-- COLLISION GROUND PARAM -->
+  <arg name="collision_ground" default="false"/>
 
 	<arg name="execute_on_niryo_one_raspberry_pi_image" value="false"/>
   <arg name="urdf_without_meshes" default="false" />
-	  <include file="$(find icclab_grasping_niryo)/launch/include/niryo_one_base.launch" pass_all_args="true"/> 
+	<include file="$(find icclab_grasping_niryo)/launch/include/niryo_one_base.launch" pass_all_args="true"/> 
 	  <!--	  <include file="$(find niryo_one_bringup)/launch/niryo_one_base.launch" pass_all_args="true"/> -->
-
 
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->
   <arg name="paused" default="false"/>
@@ -32,8 +31,5 @@
   
   <!-- push robot_description to factory and spawn robot in gazebo -->
   <node name="niryo_one_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model niryo_one" respawn="false" />  
-
-  <!-- And rviz for visualization --> 
-  <!--node name="rviz" pkg="rviz" type="rviz" args="-d $(find niryo_one_description)/config/default_config.rviz"     /-->
 
 </launch>

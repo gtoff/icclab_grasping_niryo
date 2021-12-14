@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys, getopt
+import sys, getopt, signal
 sys.path.append('/home/ros/catkin_ws/src/icclab_grasping_niryo/scripts/')
 import rospy
 import numpy as np
@@ -395,7 +395,14 @@ class RAPPickNPlace(object):
         print("Demo runtime: " + str(datetime.datetime.now() - start_time))
         return
 
+
+def signal_handler(signal, frame):
+    print('You pressed Ctrl+C!')
+    sys.exit(0)
+
+
 if __name__ == "__main__":
+    signal.signal(signal.SIGINT, signal_handler)
 
     if len(sys.argv) > 1:
         if (sys.argv[1] == "sim"):

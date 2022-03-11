@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 	<!-- COLLISION GROUND PARAM -->
-  <arg name="collision_ground"  value="$(arg collision_ground)"/>
+  <arg name="collision_ground"  default="true"/>
 	<param name="robot_description" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf_collisionground.xacro" if="$(arg collision_ground)"/>
 	<param name="robot_description" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf.xacro" unless="$(arg collision_ground)"/> 
  
   <!-- robot commander -->
-  <include file="$(find niryo_one_bringup)/launch/robot_commander.launch"/>
+  <!--<include file="$(find niryo_one_bringup)/launch/robot_commander.launch"/>-->
+
+  <!-- Moveit move_group -->
+    <include file="$(find niryo_one_moveit_config)/launch/move_group.launch" />
+    
+    <!-- Disable Moveit! controller timeout -->
+    <param name="move_group/trajectory_execution/execution_duration_monitoring" value="false" />
+    
+    <!-- Change start tolerance from 0.01 to 0.0 to avoid this error : "Invalid Trajectory: start point deviates from current robot state more than"-->
+    <!-- more info http://moveit.ros.org/moveit!/ros/2017/01/03/firstIndigoRelease.html -->
+    <param name="/move_group/trajectory_execution/allowed_start_tolerance" value="0.0" />
+  
+    <!-- Change from 0.1 to 0.3 rad -->
+    <!-- Allows joints to be outside of min and max values when starting -->
+    <param name="/move_group/start_state_max_bounds_error" value="0.3" />
+
+  <rosparam file="$(find niryo_one_moveit_config)/config/controllers.yaml"/>
+
   <node pkg="icclab_grasping_niryo" type="pub_fake_gripper_position.sh" name="fake_gripper"/> 
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"/>
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find icclab_grasping_niryo)/config/niryo_pickandplace.rviz"/>

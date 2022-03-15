@@ -7,4 +7,11 @@
   <arg name="cam_info" value="/camera/color/camera_info" />
   <arg name="output_frame" value="camera_color_optical_frame" />
   <node pkg="ar_track_alvar" type="findMarkerBundlesNoKinect" name="ar_track_bundle" args="4.5 0.08 0.2 $(arg cam_img_raw) $(arg cam_info) $(arg output_frame) $(find icclab_grasping_niryo)/marker_bundles/bundle9to17.xml" respawn="true" />
+  <param name="aruco_detect/dictionary" value="7"/>
+  <param name="aruco_detect/fiducial_len" value="0.045"/>
+  <param name="aruco_detect/publish_images" value="true"/>
+  <!-- <node pkg="aruco_detect" type="aruco_detect" name="aruco_detect" respawn="true" >
+    <remap from="/camera" to="/camera/color/image_raw"/>
+    <remap from="/camera_info" to="/camera/color/camera_info"/>
+  </node> -->
 </launch>

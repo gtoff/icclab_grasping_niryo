@@ -26,8 +26,8 @@ def calibrate_camera():
 	time.sleep(5)
 	t = rospy.Time.now()
 
-	listener.waitForTransform("ground_link", "camera_color_optical_frame", t, rospy.Duration(4.0))
-	(trans, quat) = listener.lookupTransform("ground_link", "camera_color_optical_frame", t)
+	listener.waitForTransform("ground_link", "camera_link", t, rospy.Duration(4.0))
+	(trans, quat) = listener.lookupTransform("ground_link", "camera_link", t)
 
 	# pose_msg = geometry_msgs.msg.PoseStamped()
 	# pose_msg.header.frame_id = "ar_marker_" + ar_marker_id
@@ -45,17 +45,18 @@ def calibrate_camera():
 	#trans = (pose_final.pose.position.x, pose_final.pose.position.y, pose_final.pose.position.z)
 	#quat  = (pose_final.pose.orientation.x, pose_final.pose.orientation.y, pose_final.pose.orientation.z, pose_final.pose.orientation.w)
 
-	print("Ground_link-to-camera_color_optical_frame transform: [x y z | x y z w]")
+	print("Ground_link-to-camera_link_frame transform: [x y z | x y z w]")
 	pprint(trans+quat)
 
 	buf = []
 	buf.append("<launch>\n")
-	buf.append('<node pkg="tf" type="static_transform_publisher" name="camera_color_optical_frame_broadcaster" args="')
+	buf.append('<node pkg="tf" type="static_transform_publisher" name="camera_link_frame_broadcaster" args="')
 	for x in trans:
 		buf.append(str(x) + " ")
 	for x in quat:
 		buf.append(str(x) + " ")
-	buf.append('ground_link camera_color_optical_frame 100" />\n')
+	buf.append('ground_link camera_link 100" />\n')
+	buf.append('<node pkg="tf" type="static_transform_publisher" name="camera_color_optical_frame_to_link" args="-0.001 0.015 0.000 -0.498 0.505 -0.495 0.502 camera_link camera_color_optical_frame 100" />\n')
 	buf.append("</launch>\n")
 
 	with open(os.path.dirname(__file__) + '/../launch/static_camera_transformation_publisher.launch', 'w') as outfile:

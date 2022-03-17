@@ -241,7 +241,7 @@
 		</model>
 
     <include>
-     <uri>model://marker12</uri>
+     <uri>model://marker1</uri>
       <name>marker12</name>
       <pose>0.309 0.0 0.025 -0.0  0 -0.0</pose>
     </include>

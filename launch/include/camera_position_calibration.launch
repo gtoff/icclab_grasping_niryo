@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
    <!-- camera position estimation using markers (make sure camera is on)-->
-  <include file="$(find icclab_grasping_niryo)/launch/ar_track_bundle.launch"/> 
+  <include file="$(find icclab_grasping_niryo)/launch/include/ar_track_bundle.launch"/> 
   <!-- launch our demo control script -->
    <node pkg="icclab_grasping_niryo" type="calibrate_camera.py" name="calibrate_camera"/> 
 

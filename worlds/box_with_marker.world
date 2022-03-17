@@ -11,8 +11,9 @@
     <include>
       <uri>model://kinect_ros</uri>
       <name>kinect_camera_link</name>
-      <pose>0.664309 0.141670 0.405474 0.025043 0.711576 -2.936789</pose>
+      <pose>0.664309 0.141670 0.405474 0.025043 0.711576 -2.936789 </pose>
     </include>
+
 
     <physics type="ode">
       <real_time_update_rate>1000.0</real_time_update_rate>
@@ -238,6 +239,13 @@
 			</visual>
 			</link>
 		</model>
+
+    <include>
+     <uri>model://marker12</uri>
+      <name>marker12</name>
+      <pose>0.309 0.0 0.025 -0.0  0 -0.0</pose>
+    </include>
+
 
         <!-- box sides -->
         <model name="box_side1">

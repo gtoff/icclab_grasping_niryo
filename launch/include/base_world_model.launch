@@ -2,7 +2,7 @@
 <launch>
   <!-- COLLISION GROUND PARAM -->
   <arg name="collision_ground" default="false"/>
-
+  <arg name="world_name" default="box.world"/>
 	<arg name="execute_on_niryo_one_raspberry_pi_image" value="false"/>
   <arg name="urdf_without_meshes" default="false" />
 	<include file="$(find icclab_grasping_niryo)/launch/include/niryo_one_base.launch" pass_all_args="true"/> 
@@ -20,7 +20,7 @@
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <!--arg name="world_name" value="$(find niryo_one_gazebo)/worlds/niryo_one.world"/-->
     <!--arg name="world_name" value="$(find icclab_grasping_niryo)/worlds/niryo_one_two_items.world"/-->
-    <arg name="world_name" value="$(find icclab_grasping_niryo)/worlds/box.world"/>
+    <arg name="world_name" value="$(find icclab_grasping_niryo)/worlds/$(arg world_name)"/>
     <arg name="verbose" value="true" />
     <arg name="debug" value="$(arg debug)" />
     <arg name="gui" value="$(arg gui)" />

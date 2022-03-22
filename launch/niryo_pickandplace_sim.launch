@@ -14,4 +14,6 @@
 
   <node pkg="timed_roslaunch" type="timed_roslaunch.sh" args="15 icclab_grasping_niryo rviz_grasps_filter_sim.launch" name="timed_filter" />
 
+  <node pkg="icclab_grasping_niryo" type="control_gripper.py" args="--sim" name="control_gripper"/> 
+
 </launch>

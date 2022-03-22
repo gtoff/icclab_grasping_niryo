@@ -15,7 +15,10 @@
   <!-- filtering and clustering with service calls-->
   <include file="$(find icclab_grasping_niryo)/launch/include/grasps_filter_hw.launch"/>
   
+  <!-- gripper control script-->
+  <node pkg="icclab_grasping_niryo" type="control_gripper.py" name="control_gripper"/>
+
   <!-- camera position estimation-->
-  <include file="$(find icclab_grasping_niryo)/launch/include/ar_track_bundle.launch"/> 
+  <!-- <include file="$(find icclab_grasping_niryo)/launch/include/ar_track_bundle.launch"/>  -->
 
 </launch>

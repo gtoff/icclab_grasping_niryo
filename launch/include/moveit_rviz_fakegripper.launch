@@ -22,9 +22,16 @@
     <!-- Allows joints to be outside of min and max values when starting -->
     <param name="/move_group/start_state_max_bounds_error" value="0.3" />
 
-  <rosparam file="$(find niryo_one_moveit_config)/config/controllers.yaml"/>
+    <!-- Set some rosparams that Niryo would normally setup -->
+    <rosparam file="$(find niryo_one_moveit_config)/config/controllers.yaml"/>
+    <group ns="niryo_one/python_api">
+        <param name="service_timeout" type="int" value="2" />
+        <param name="action_connection_timeout" type="int" value="2" />
+        <param name="action_execute_timeout" type="int" value="15" />
+        <param name="action_preempt_timeout" type="int" value="3" />
+    </group>
 
-  <node pkg="icclab_grasping_niryo" type="pub_fake_gripper_position.sh" name="fake_gripper"/> 
+  <node pkg="icclab_grasping_niryo" type="pub_fake_gripper_position.sh" name="fake_gripper"/>
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"/>
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find icclab_grasping_niryo)/config/niryo_pickandplace.rviz"/>
 

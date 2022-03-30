@@ -78,7 +78,7 @@ class control_gripper:
 
   def close(self, data, sim):
       rospy.loginfo("Received gripper close request")
-      print("Received gripper open request")
+      print("Received gripper close request")
       if (sim):
         self.send_to_sim_gripper([-0.015, 0.015])
       else:

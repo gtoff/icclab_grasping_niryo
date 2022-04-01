@@ -9,7 +9,7 @@
   <!-- camera placement args -->
   <arg name="x" default="0.66" />
 	<arg name="y" default="0.14" />
-	<arg name="z" default="0.20" />
+	<arg name="z" default="0.40" />
 	<arg name="R" default="0" />
 	<arg name="P" default="0.7" />
 	<arg name="Y" default="-3" />

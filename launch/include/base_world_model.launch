@@ -5,6 +5,15 @@
   <arg name="world_name" default="box.world"/>
 	<arg name="execute_on_niryo_one_raspberry_pi_image" value="false"/>
   <arg name="urdf_without_meshes" default="false" />
+
+  <!-- camera placement args -->
+  <arg name="x" default="0.66" />
+	<arg name="y" default="0.14" />
+	<arg name="z" default="0.20" />
+	<arg name="R" default="0" />
+	<arg name="P" default="0.7" />
+	<arg name="Y" default="-3" />
+
 	<include file="$(find icclab_grasping_niryo)/launch/include/niryo_one_base.launch" pass_all_args="true"/> 
 	  <!--	  <include file="$(find niryo_one_bringup)/launch/niryo_one_base.launch" pass_all_args="true"/> -->
 
@@ -31,5 +40,10 @@
   
   <!-- push robot_description to factory and spawn robot in gazebo -->
   <node name="niryo_one_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model niryo_one" respawn="false" />  
+
+  <!-- load realsense description into params and spawn in gazebo -->
+  <param name="realsense_description" command="$(find xacro)/xacro $(find icclab_grasping_niryo)/urdf/realsense_standalone.urdf.xacro x:=$(arg x) y:=$(arg y) z:=$(arg z) R:=$(arg R) P:=$(arg P) Y:=$(arg Y)"/>
+  <node name="realsense_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param realsense_description -model camera" respawn="false" />  
+  <include file="$(find icclab_grasping_niryo)/launch/include/ground_to_camera.launch" pass_all_args="true"/>
 
 </launch>

@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-<node name="rviz" pkg="rviz" type="rviz" args="-d $(find icclab_grasping_niryo)/config/niryo_pickandplace.rviz"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find icclab_grasping_niryo)/config/niryo_pickandplace.rviz" />
 
-<include file="$(find icclab_grasping_niryo)/launch/include/ground_to_camera.launch"/>
-	
-<!--  <node name="pcl_throttler" type="throttle" pkg="topic_tools" args="messages /camera/depth/points 0.37 /camera/depth/points_throttled" />  -->
-<node name = "pcl_dropper" type="drop" pkg="topic_tools" args= "/camera/depth/points 9 10 /camera/depth/points_throttled" />
+    <!--  <node name="pcl_throttler" type="throttle" pkg="topic_tools" args="messages /camera/depth/points 0.37 /camera/depth/points_throttled" />  -->
+    <node name="pcl_dropper" type="drop" pkg="topic_tools" args="/camera/depth/points 9 10 /camera/depth/points_throttled" />
 
-<!-- grasp generation with GPD-->  
-<include file="$(find gpd_ros)/launch/niryo_grasp_generation.launch"/>
-	
-<!-- run point cloud filtering and clustering server--> 
-<node name="pointcloud_filtering" pkg="irlab_point_cloud_filtering" type="point_cloud_filtering_server" respawn="true" output="screen"/>
+    <!-- grasp generation with GPD-->
+    <include file="$(find gpd_ros)/launch/niryo_grasp_generation.launch" />
+
+    <!-- run point cloud filtering and clustering server-->
+    <node name="pointcloud_filtering" pkg="irlab_point_cloud_filtering" type="point_cloud_filtering_server" respawn="true" output="screen" />
 
 </launch>
-
-

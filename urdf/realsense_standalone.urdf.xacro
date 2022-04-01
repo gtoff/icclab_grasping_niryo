@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="realsense">
+  <xacro:arg name="x" default="0.664309"/>
+  <xacro:arg name="y" default="0.141670"/>
+  <xacro:arg name="z" default="0.205474"/>
+  <xacro:arg name="R" default="0.025043"/>
+  <xacro:arg name="P" default="0.711576"/>
+  <xacro:arg name="Y" default="-2.936789"/>
+  
+  <xacro:include filename="$(find icclab_grasping_niryo)/urdf/intel_d435_for_niryo.urdf.xacro" /> 
+  <link name="world" />
+
+  <xacro:sensor_d435_icclab prefix="" prefix_topic="camera" parent="world">
+    <origin xyz="$(arg x) $(arg y) $(arg z)" rpy="$(arg R) $(arg P) $(arg Y)"/>
+  </xacro:sensor_d435_icclab>
+</robot>

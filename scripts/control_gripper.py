@@ -7,6 +7,7 @@ import time
 import actionlib
 import argparse
 from std_msgs.msg import Empty, Float64
+from sensor_msgs.msg import JointState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from control_msgs.msg import FollowJointTrajectoryAction
 from control_msgs.msg import FollowJointTrajectoryGoal
@@ -15,6 +16,8 @@ from niryo_one_msgs.msg import ToolActionGoal
 # GRIPPER_ID=TOOL_GRIPPER_1_ID
 
 class control_gripper:
+  # Required for HW
+  GRIPPER_POSITION = [0, 0]
 
   def __init__(self, name, sim):
     #Approach vector and offset distance to compensate for gripper length
@@ -29,9 +32,28 @@ class control_gripper:
       # rospy.sleep(0.5)
       # self.n.change_tool(GRIPPER_ID)
       self.action_pub = rospy.Publisher("/niryo_one/tool_action/goal", ToolActionGoal, queue_size=1)
+      self.jointState_pub = rospy.Publisher('/joint_states', JointState, queue_size=1)
+      self.publishGripperJointState()
     subOpen = rospy.Subscriber("/gripper/open", Empty, callback=self.open, queue_size=1, callback_args=sim)
     subClose = rospy.Subscriber("/gripper/close", Empty, callback=self.close, queue_size=1, callback_args=sim)
+
     rospy.spin()
+
+
+  def publishGripperJointState(self):
+    gripper_joint_names = ['gripper_left_finger_joint',
+                           'gripper_right_finger_joint']
+
+    rate = rospy.Rate(10) # 10hz
+
+    while not rospy.is_shutdown():
+      joint_state = JointState()
+      joint_state.name = gripper_joint_names
+      joint_state.position = self.GRIPPER_POSITION
+
+      rospy.loginfo(joint_state)
+      self.jointState_pub.publish(joint_state)
+      rate.sleep()
 
 
   def getToolActionGoal(self):
@@ -67,8 +89,10 @@ class control_gripper:
   def open(self, data, sim):
       rospy.loginfo("Received gripper open request")
       print("Received gripper open request")
+
       if (sim):
-        self.send_to_sim_gripper([0, 0])
+        self.GRIPPER_POSITION = [0, 0]
+        self.send_to_sim_gripper(self.GRIPPER_POSITION)
       else:
         # self.n.open_gripper(GRIPPER_ID, 300)
         msg = self.getToolActionGoal()
@@ -79,8 +103,10 @@ class control_gripper:
   def close(self, data, sim):
       rospy.loginfo("Received gripper close request")
       print("Received gripper close request")
+
       if (sim):
-        self.send_to_sim_gripper([-0.015, 0.015])
+        self.GRIPPER_POSITION = [-0.015, 0.015]
+        self.send_to_sim_gripper(self.GRIPPER_POSITION)
       else:
         # self.n.close_gripper(GRIPPER_ID, 300)
         msg = self.getToolActionGoal()

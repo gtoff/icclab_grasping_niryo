@@ -32,15 +32,15 @@ class control_gripper:
       # rospy.sleep(0.5)
       # self.n.change_tool(GRIPPER_ID)
       self.action_pub = rospy.Publisher("/niryo_one/tool_action/goal", ToolActionGoal, queue_size=1)
-      self.jointState_pub = rospy.Publisher('/joint_states', JointState, queue_size=1)
-      self.publishGripperJointState()
+      self.jointStates_pub = rospy.Publisher('/joint_states', JointState, queue_size=1)
+      self.publishGripperJointStates()
     subOpen = rospy.Subscriber("/gripper/open", Empty, callback=self.open, queue_size=1, callback_args=sim)
     subClose = rospy.Subscriber("/gripper/close", Empty, callback=self.close, queue_size=1, callback_args=sim)
 
     rospy.spin()
 
 
-  def publishGripperJointState(self):
+  def publishGripperJointStates(self):
     gripper_joint_names = ['gripper_left_finger_joint',
                            'gripper_right_finger_joint']
 
@@ -52,7 +52,7 @@ class control_gripper:
       joint_state.position = self.GRIPPER_POSITION
 
       rospy.loginfo(joint_state)
-      self.jointState_pub.publish(joint_state)
+      self.jointStates_pub.publish(joint_state)
       rate.sleep()
 
 
@@ -90,11 +90,13 @@ class control_gripper:
       rospy.loginfo("Received gripper open request")
       print("Received gripper open request")
 
+      gripper_position = [0, 0]
+
       if (sim):
-        self.GRIPPER_POSITION = [0, 0]
-        self.send_to_sim_gripper(self.GRIPPER_POSITION)
+        self.send_to_sim_gripper(gripper_position)
       else:
         # self.n.open_gripper(GRIPPER_ID, 300)
+        self.GRIPPER_POSITION = gripper_position
         msg = self.getToolActionGoal()
         self.action_pub.publish(msg)
       print("[GRIPPER OPENED]")
@@ -104,11 +106,13 @@ class control_gripper:
       rospy.loginfo("Received gripper close request")
       print("Received gripper close request")
 
+      gripper_position = [-0.015, 0.015]
+
       if (sim):
-        self.GRIPPER_POSITION = [-0.015, 0.015]
-        self.send_to_sim_gripper(self.GRIPPER_POSITION)
+        self.send_to_sim_gripper(gripper_position)
       else:
         # self.n.close_gripper(GRIPPER_ID, 300)
+        self.GRIPPER_POSITION = gripper_position
         msg = self.getToolActionGoal()
         msg.goal.cmd.cmd_type = 2 # close
         self.action_pub.publish(msg)

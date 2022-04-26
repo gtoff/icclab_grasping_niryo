@@ -22,22 +22,20 @@ class control_gripper:
   def __init__(self, name, sim):
     #Approach vector and offset distance to compensate for gripper length
     rospy.init_node(name)
+    subOpen = rospy.Subscriber("/gripper/open", Empty, callback=self.open, queue_size=1, callback_args=sim)
+    subClose = rospy.Subscriber("/gripper/close", Empty, callback=self.close, queue_size=1, callback_args=sim)
     if (sim):
       self.gripper_pub1 = rospy.Publisher('/gripper_left_controller/command', Float64, queue_size=1)
       self.gripper_pub2 = rospy.Publisher('/gripper_right_controller/command', Float64, queue_size=1)
       # self.gripper_client = rospy.Publisher('/gripper_follow_joint_trajectory_controller/follow_joint_trajectory/goal', FollowJointTrajectoryAction, queue_size=1)
       self.gripper_client = actionlib.SimpleActionClient('/gripper_follow_joint_trajectory_controller/follow_joint_trajectory', FollowJointTrajectoryAction)
+      rospy.spin()
     else:
-      # self.n = NiryoOne()  
-      # rospy.sleep(0.5)
-      # self.n.change_tool(GRIPPER_ID)
       self.action_pub = rospy.Publisher("/niryo_one/tool_action/goal", ToolActionGoal, queue_size=1)
       self.jointStates_pub = rospy.Publisher('/joint_states', JointState, queue_size=1)
       self.publishGripperJointStates()
-    subOpen = rospy.Subscriber("/gripper/open", Empty, callback=self.open, queue_size=1, callback_args=sim)
-    subClose = rospy.Subscriber("/gripper/close", Empty, callback=self.close, queue_size=1, callback_args=sim)
 
-    rospy.spin()
+    
 
 
   def publishGripperJointStates(self):
@@ -48,6 +46,7 @@ class control_gripper:
 
     while not rospy.is_shutdown():
       joint_state = JointState()
+      joint_state.header.stamp = rospy.get_rostime()
       joint_state.name = gripper_joint_names
       joint_state.position = self.GRIPPER_POSITION
 

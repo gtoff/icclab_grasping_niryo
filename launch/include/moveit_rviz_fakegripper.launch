@@ -31,7 +31,7 @@
         <param name="action_preempt_timeout" type="int" value="3" />
     </group>
 
-  <node pkg="icclab_grasping_niryo" type="pub_fake_gripper_position.sh" name="fake_gripper"/>
+  <!-- <node pkg="icclab_grasping_niryo" type="pub_fake_gripper_position.sh" name="fake_gripper"/> -->
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"/>
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find icclab_grasping_niryo)/config/niryo_pickandplace.rviz"/>
 

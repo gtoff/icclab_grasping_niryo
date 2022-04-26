@@ -143,3 +143,4 @@ def create_mesh_and_save(cloud):
     stl_writer.SetFileName(filename)
     stl_writer.SetInputConnection(delny.GetOutputPort())
     stl_writer.Write()
+

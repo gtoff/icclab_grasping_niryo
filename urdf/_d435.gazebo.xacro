@@ -137,7 +137,8 @@ This is the Gazebo URDF model for the Intel RealSense D435 camera
       	<rangeMinDepth>0.1</rangeMinDepth>
       	<rangeMaxDepth>10.0</rangeMaxDepth>
       	<pointCloud>true</pointCloud>
-      	<pointCloudTopicName>depth/points</pointCloudTopicName>
+        <!-- changed topic to be consistent with what we have on phys robot -->
+        <pointCloudTopicName>depth_registered/points</pointCloudTopicName>
       	<pointCloudCutoff>0.1</pointCloudCutoff>
       </plugin>
     </gazebo>

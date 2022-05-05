@@ -2,15 +2,15 @@
 <launch>
   <arg name="camera" default="camera"/>
   <arg name="aruco_marker_id" value="13" />
-  <node pkg="tf" type="static_transform_publisher" name="aruco_link_broadcaster" args="0.003 -0.23 0 1.57 0 0 ar_marker_$(arg aruco_marker_id) ground_link 100" /> 
+  <node pkg="tf" type="static_transform_publisher" name="aruco_link_broadcaster" args="0.003 -0.18 0.02 1.57 0 0 ar_marker_$(arg aruco_marker_id) ground_link 100" /> 
   <!-- <node pkg="tf" type="static_transform_publisher" name="camera_color_optical_frame_to_link" args="-0.001 0.015 0.000 -0.498 0.505 -0.495 0.502 camera_link camera_color_optical_frame 100" /> -->
   <arg name="cam_img_raw" value="/camera/color/image_raw" />
   <arg name="cam_info" value="/camera/color/camera_info" />
   <arg name="output_frame" value="camera_color_optical_frame" />
-  <node pkg="ar_track_alvar" type="findMarkerBundlesNoKinect" name="ar_track_bundle" args="4.5 0.08 0.2 $(arg cam_img_raw) $(arg cam_info) $(arg output_frame) $(find icclab_grasping_niryo)/marker_bundles/bundle9to17.xml" respawn="true" />
-  <param name="aruco_detect/dictionary" value="7"/>
-  <param name="aruco_detect/fiducial_len" value="0.045"/>
-  <param name="aruco_detect/publish_images" value="true"/>
+  <node pkg="ar_track_alvar" type="findMarkerBundlesNoKinect" name="ar_track_bundle" args="4.5 0.001 0.001 $(arg cam_img_raw) $(arg cam_info) $(arg output_frame) $(find icclab_grasping_niryo)/marker_bundles/bundle9to17.xml" respawn="true" />
+  <!-- <param name="aruco_detect/dictionary" value="7"/> -->
+  <!-- <param name="aruco_detect/fiducial_len" value="0.045"/> -->
+  <!-- <param name="aruco_detect/publish_images" value="true"/> -->
   <!-- <node pkg="aruco_detect" type="aruco_detect" name="aruco_detect" respawn="true" >
     <remap from="/camera" to="/camera/color/image_raw"/>
     <remap from="/camera_info" to="/camera/color/camera_info"/>

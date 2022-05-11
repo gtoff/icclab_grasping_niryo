@@ -5,15 +5,15 @@
   <arg name="collision_ground"   default="true"/>
 	  
   <!-- moveit rviz fake_gripper-->
-  <include file="$(find icclab_grasping_niryo)/launch/include/moveit_rviz_fakegripper.launch"
+  <include file="$(find icclab_grasping_niryo)/launch/include/moveit_fakegripper.launch"
  pass_all_args="true"/>
   
   <!--  <node name="pcl_throttler" type="throttle" pkg="topic_tools"
   args="messages /camera/depth/points 0.37 /camera/depth/points_throttled" />  -->
-  <node name = "pcl_dropper" type="drop" pkg="topic_tools" args= "/camera/depth_registered/points 9 10 /camera/depth/points_throttled" />	
+  <!-- <node name = "pcl_dropper" type="drop" pkg="topic_tools" args= "/camera/depth_registered/points 9 10 /camera/depth/points_throttled" />	 -->
 
   <!-- filtering and clustering with service calls-->
-  <include file="$(find icclab_grasping_niryo)/launch/include/grasps_filter_hw.launch"/>
+  <include file="$(find icclab_grasping_niryo)/launch/include/rviz_grasps_filter.launch"/>
   
   <!-- gripper control script-->
   <node pkg="icclab_grasping_niryo" type="control_gripper.py" name="control_gripper"/>

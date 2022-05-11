@@ -42,7 +42,7 @@ import time
 import subprocess
 from std_srvs.srv import Empty
 
-camera_frame_id = "camera_optical_frame"  #default to simulation, but is required to be set sim/hw
+camera_frame_id = "camera_color_optical_frame"  #default to simulation, but is required to be set sim/hw
 simulation = True #default to simulation, but is required to be set sim/hw
 
 class RAPPickNPlace(object):
@@ -403,11 +403,13 @@ def signal_handler(signal, frame):
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
+    pnp = RAPPickNPlace()
+    pnp.run()
 
-    if len(sys.argv) > 1:
+"""     if len(sys.argv) > 1:
         if (sys.argv[1] == "sim"):
             print("You selected simulation")
-            camera_frame_id = "camera_optical_frame"
+            camera_frame_id = "camera_color_optical_frame"
             simulation=True
         elif (sys.argv[1] == "hw"):
             print("You selected hw")
@@ -418,11 +420,8 @@ if __name__ == "__main__":
             sys.exit()
     else:
         print("ERROR: Set sim/hw option!")
-        sys.exit()
+        sys.exit() """
 
-    pnp = RAPPickNPlace()
-    pnp.run()
 
     
-
 

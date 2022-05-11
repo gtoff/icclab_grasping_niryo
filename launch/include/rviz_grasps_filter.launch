@@ -13,3 +13,6 @@
     <node name="pointcloud_filtering" pkg="irlab_point_cloud_filtering" type="point_cloud_filtering_server" respawn="true" output="screen" args="/camera/depth_registered/points"/>
 
 </launch>
+
+
+

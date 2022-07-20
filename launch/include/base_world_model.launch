@@ -42,8 +42,10 @@
   <node name="niryo_one_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model niryo_one" respawn="false" />  
 
   <!-- load realsense description into params and spawn in gazebo -->
-  <param name="realsense_description" command="$(find xacro)/xacro $(find icclab_grasping_niryo)/urdf/realsense_standalone.urdf.xacro x:=$(arg x) y:=$(arg y) z:=$(arg z) R:=$(arg R) P:=$(arg P) Y:=$(arg Y)"/>
+  <param name="realsense_description" command="$(find xacro)/xacro $(find icclab_grasping_niryo)/urdf/realsense_standalone.urdf.xacro x:=$(arg x) y:=$(arg y) z:=$(arg z) R:=$(arg R) P:=$(arg P) Y:=$(arg Y)"/>  
   <node name="realsense_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param realsense_description -model camera" respawn="false" />  
+  <!-- add tf state publisher for camera -->
+  <node name="camera_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" args="robot_description:=realsense_description" output="screen" />
   <include file="$(find icclab_grasping_niryo)/launch/include/ground_to_camera.launch" pass_all_args="true"/>
 
 </launch>

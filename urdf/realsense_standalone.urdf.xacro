@@ -10,10 +10,24 @@
 <link name="world" />
 
 <!-- https://answers.ros.org/question/348331/realsense-d435-gazebo-plugin/ -->
-<xacro:include filename="$(find icclab_grasping_niryo)/urdf/_d435.urdf.xacro" />
+<!-- <xacro:include filename="$(find icclab_grasping_niryo)/urdf/_d435.urdf.xacro" />
 <xacro:sensor_d435 parent="world">
   <origin xyz="$(arg x) $(arg y) $(arg z)" rpy="$(arg R) $(arg P) $(arg Y)"/>
+</xacro:sensor_d435> -->
+
+<xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" />
+<xacro:arg name="use_nominal_extrinsics" default="true"/>
+<xacro:arg name="add_plug" default="false" />
+<xacro:arg name="use_mesh" default="true" />
+<xacro:sensor_d435 parent="world" use_nominal_extrinsics="$(arg use_nominal_extrinsics)" add_plug="$(arg add_plug)" use_mesh="$(arg use_mesh)">
+  <origin xyz="$(arg x) $(arg y) $(arg z)" rpy="$(arg R) $(arg P) $(arg Y)"/>
 </xacro:sensor_d435>
+<!-- Realsense Gazebo Plugin -->
+<xacro:include filename="$(find icclab_grasping_niryo)/urdf/_d435.gazebo.xacro"/>
+<xacro:arg name="name" default="camera" />
+<xacro:arg name="topics_ns" default="camera" />
+<xacro:gazebo_d435 camera_name="$(arg name)" reference_link="$(arg name)_link" topics_ns="$(arg topics_ns)" depth_optical_frame="$(arg name)_depth_optical_frame" color_optical_frame="$(arg name)_color_optical_frame" infrared1_optical_frame="$(arg name)_left_ir_optical_frame" infrared2_optical_frame="$(arg name)_right_ir_optical_frame"/>
+
 
 <!-- <xacro:include filename="$(find robotnik_sensors)/urdf/intel_d435.urdf.xacro" />
 <xacro:sensor_intel_d435 prefix="" prefix_topic="camera" parent="world">

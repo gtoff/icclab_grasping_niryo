@@ -9,11 +9,11 @@
 	<arg name="Y" default="-2.936789" />
 	<!-- camera position -->
 	<!-- static_transform_publisher x y z yaw pitch roll frame_id child_frame_id period_in_ms: NOTE: YAW pitch ROLL! -->
-	<node pkg="tf" type="static_transform_publisher" name="ground_to_camera" args="$(arg x) $(arg y) $(arg z) $(arg Y) $(arg P) $(arg R)  ground_link camera_link 50" />
+	<node pkg="tf" type="static_transform_publisher" name="ground_to_camera" args="$(arg x) $(arg y) $(arg z) $(arg Y) $(arg P) $(arg R)  ground_link camera_bottom_screw_frame 50" />
 	<!--node pkg="tf" type="static_transform_publisher" name="ground_to_camera" args="0.505713 0.249073 0.265796 -2.270220 0.649014 0.087428 ground_link camera_link 50"/-->
 
 
 	<!-- static transform to camera optical frame -->
-	<node pkg="tf" type="static_transform_publisher" name="camera_to_opt_frame" args="0 0 0 -1.57 0 -1.57 camera_link camera_color_optical_frame 50" />
+	<!-- <node pkg="tf" type="static_transform_publisher" name="camera_screw_to_opt_frame" args="0 0.033 0.013 -1.571 0 -1.571 camera_bottom_screw_frame camera_color_optical_frame 50" /> -->
 
 </launch>

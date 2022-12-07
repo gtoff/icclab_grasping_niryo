@@ -21,7 +21,7 @@ import geometry_msgs.msg
 from geometry_msgs.msg import PoseStamped, Vector3, Pose, TransformStamped, PointStamped, Vector3Stamped
 from trajectory_msgs.msg import JointTrajectoryPoint
 from visualization_msgs.msg import Marker
-from std_msgs.msg import Header, ColorRGBA, String
+from std_msgs.msg import Header, ColorRGBA, String, Empty
 import sensor_msgs.msg  # import PointCloud2
 #from gpd_controller import GpdGrasps
 #from robot_controller import RobotPreparation
@@ -29,7 +29,6 @@ from moveit_python.geometry import rotate_pose_msg_by_euler_angles
 from tf.transformations import *
 from filter_pointcloud_client import call_pointcloud_filter_service
 from cluster_pointcloud_client import call_pointcloud_cluster_service
-from send_gripper import gripper_client_2
 from rosnode import get_node_names, kill_nodes
 from sensor_msgs import point_cloud2
 import math
@@ -41,7 +40,7 @@ from tf.msg import tfMessage
 from niryo_one_python_api.niryo_one_api import *
 import time
 import subprocess
-from std_srvs.srv import Empty
+from std_srvs.srv import Empty as ServiceEmpty
 
 camera_frame_id = "camera_color_optical_frame"  #default to simulation, but is required to be set sim/hw
 simulation = True #default to simulation, but is required to be set sim/hw
@@ -62,6 +61,8 @@ class RAPPickNPlace(object):
         self.grasp_subscriber = rospy.Subscriber("/detect_grasps/clustered_grasps", GraspConfigList,
                                                  self.grasp_callback)
         self.pose_publisher = rospy.Publisher('grasp_pose', PoseStamped, queue_size=1)
+        self.gripper_open_pub = rospy.Publisher('/gripper/open', Empty, queue_size=1)
+        self.gripper_close_pub = rospy.Publisher('/gripper/close', Empty, queue_size=1)
 
         if not simulation:
             # Start physical arm
@@ -165,7 +166,7 @@ class RAPPickNPlace(object):
         self.planningscene.clear()
         rospy.sleep(1)
         rospy.wait_for_service('/clear_octomap')
-        clear_octomap = rospy.ServiceProxy('/clear_octomap', Empty)
+        clear_octomap = rospy.ServiceProxy('/clear_octomap', ServiceEmpty)
         clear_octomap()
        # call_pointcloud_cluster_service()
         call_pointcloud_filter_service()
@@ -251,10 +252,7 @@ class RAPPickNPlace(object):
            # if pick_result.error_code.val == 1:
             if (pick_result == 1) or (pick_result == -4):
                 print("Grasp successful!")
-                if not simulation:
-                    self.niryo.close_gripper(TOOL_GRIPPER_1_ID, 200)
-                else:
-                    result = gripper_client_2(0.8)
+                self.gripper_close_pub.publish(Empty())
                 print("Gripper closed")
                 return single_grasp
         print("All grasp plans failed")
@@ -288,10 +286,7 @@ class RAPPickNPlace(object):
                 result = self.movegroup.execute(plan, wait=True)
                 rospy.sleep(1)
                 if (drop==True):
-                    if not simulation:
-                        self.niryo.open_gripper(TOOL_GRIPPER_1_ID, 200)
-                    else:
-                        result = gripper_client_2(-0.5)
+                    self.gripper_open_pub.publish(Empty())
                     rospy.sleep(3)
                     print("Gripper opened")
                     print("Dropping successful!")
@@ -337,10 +332,7 @@ class RAPPickNPlace(object):
         self.add_object_mesh()
 
         # open gripper
-        if not simulation:
-            self.niryo.open_gripper(TOOL_GRIPPER_1_ID, 200)
-        else:
-            result = gripper_client_2(-0.8)
+        self.gripper_open_pub.publish(Empty())
         print("Gripper opened")
 
         succesful_grasp=self.pick_ppi(grasps)

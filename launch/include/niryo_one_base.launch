@@ -46,7 +46,7 @@
     </group>
 
 	    
-    <!-- load URDF -->
+   <!-- load URDF -->
    <!-- COLLISION GROUND PARAM -->
     <arg name="collision_ground"  value="$(arg collision_ground)"/>
     <group if="$(eval collision_ground == false)"> 
@@ -67,7 +67,7 @@
     </group>
     <group if="$(eval collision_ground == true)">  
 	    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf_collisionground.xacro"/>
-	    <param name="robot_description_tf2" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf.xacro" />
+	    <param name="robot_description_tf2" command="$(find xacro)/xacro --inorder $(find icclab_grasping_niryo)/urdf/niryo_one.urdf_collisionground.xacro" />
     </group>
 
 </launch>

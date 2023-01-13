@@ -23,6 +23,7 @@ from trajectory_msgs.msg import JointTrajectoryPoint
 from visualization_msgs.msg import Marker
 from std_msgs.msg import Header, ColorRGBA, String, Empty
 import sensor_msgs.msg  # import PointCloud2
+import shape_msgs.msg
 #from gpd_controller import GpdGrasps
 #from robot_controller import RobotPreparation
 from moveit_python.geometry import rotate_pose_msg_by_euler_angles
@@ -40,7 +41,9 @@ from niryo_one_python_api.niryo_one_api import *
 import time
 import subprocess
 from std_srvs.srv import Empty as ServiceEmpty
+from math import pi
 
+COLOR_RED = ColorRGBA(1, 0.0, 0.0, 0.5)
 camera_frame_id = "camera_color_optical_frame"  #default to simulation, but is required to be set sim/hw
 simulation = True #default to simulation, but is required to be set sim/hw
 
@@ -62,6 +65,8 @@ class RAPPickNPlace(object):
         self.pose_publisher = rospy.Publisher('grasp_pose', PoseStamped, queue_size=1)
         self.gripper_open_pub = rospy.Publisher('/gripper/open', Empty, queue_size=1)
         self.gripper_close_pub = rospy.Publisher('/gripper/close', Empty, queue_size=1)
+        self.marker_publisher = rospy.Publisher('visualization_marker', Marker, queue_size=1)
+        self.marker_id_counter = 0
 
         if not simulation:
             # Start physical arm
@@ -75,10 +80,10 @@ class RAPPickNPlace(object):
         ## Initialize MoveGroupCommander (movegroup), PlanningScene (planningscene)
         group_name = "arm"
         self.movegroup = moveit_commander.MoveGroupCommander(group_name, robot_description="/robot_description", ns="")
-        self.movegroup.set_goal_orientation_tolerance(0.005)
-        self.movegroup.set_goal_tolerance(0.005)
-        self.movegroup.set_goal_joint_tolerance(0.003)
-        self.movegroup.set_planning_time(2)
+        self.movegroup.set_goal_orientation_tolerance(0.001)
+        self.movegroup.set_goal_tolerance(0.001)
+        self.movegroup.set_goal_joint_tolerance(0.001)
+        self.movegroup.set_planning_time(5)
         self.movegroup.allow_replanning(True)
         self.planningscene = PlanningSceneInterface(camera_frame_id) 
         self.tf = tf.TransformListener()
@@ -264,8 +269,82 @@ class RAPPickNPlace(object):
     def plan_and_move_to_grasp(self, grasp_pose, move=False):
         # publish grasp for rviz visualization
         self.show_grasp_pose(grasp_pose)
-        print("Planning end position")
+        print("Planning end grasp")
         return self.plan_and_move_to_pregrasp(grasp_pose, move)
+
+    def plan_and_move_to_grasp_cartesian(self, pre_grasp_pose, grasp_pose, move=False):
+        # publish grasp for rviz visualization
+        self.show_grasp_pose(grasp_pose)
+        print("Planning end grasp with cartesian path")
+        current_pose = self.movegroup.get_current_pose()
+        print("Current EE Pose: ", current_pose)
+        print("Grasp EE Pose: ", grasp_pose)
+        # path, fraction = self.movegroup.compute_cartesian_path([current_pose.pose, grasp_pose.pose], 0.001, 0.001)
+        self.movegroup.set_pose_target(grasp_pose)
+
+        line_constraints = self.create_line_constraints(pre_grasp_pose)
+        # Create a contraints list and give it a name
+        path_constraints = moveit_msgs.msg.Constraints()
+        path_constraints.position_constraints.append(line_constraints)
+        self.movegroup.set_path_constraints(path_constraints)
+
+        # And let the planner find a solution.
+        # The move_group node should automatically visualize the solution in Rviz if a path is found.
+        plan_success, plan, planning_time, error_code = self.movegroup.plan()
+        if (plan_success):
+            res = self.movegroup.execute(plan)
+        else:
+            res = False
+        # Clear the path constraints for our next experiment
+        self.movegroup.clear_path_constraints()
+            
+        #return self.plan_and_move_to_pregrasp(grasp_pose, move)
+        return res
+
+    def create_line_constraints(self, pre_grasp_pose):
+        pcm = moveit_msgs.msg.PositionConstraint()
+        self.ref_link = self.movegroup.get_pose_reference_frame()
+        self.ee_link = self.movegroup.get_end_effector_link()
+        pcm.header.frame_id = self.ref_link
+        pcm.link_name = self.ee_link
+        pcm.weight = 1
+
+        cbox = shape_msgs.msg.SolidPrimitive()
+        cbox.type = shape_msgs.msg.SolidPrimitive.BOX
+        cbox.dimensions = [0.2, 0.01, 0.01]
+        pcm.constraint_region.primitives.append(cbox)
+
+        cbox_pose = pre_grasp_pose.pose
+        pcm.constraint_region.primitive_poses.append(cbox_pose)
+
+        # display the constraints in rviz
+        self.display_box(cbox_pose, cbox.dimensions)
+
+        return pcm
+
+    def display_box(self, pose, dimensions):
+        """ Utility function to visualize position constraints. """
+        assert len(dimensions) == 3
+
+        # setup cube / box marker type
+        marker = Marker()
+        marker.header.stamp = rospy.Time.now()
+        marker.ns = "/"
+        marker.id = self.marker_id_counter
+        marker.type = Marker.CUBE
+        marker.action = Marker.ADD
+        marker.color = COLOR_RED
+        marker.header.frame_id = self.ref_link
+
+        # fill in user input
+        marker.pose = pose
+        marker.scale.x = dimensions[0]
+        marker.scale.y = dimensions[1]
+        marker.scale.z = dimensions[2]
+
+        # publish it!
+        self.marker_publisher.publish(marker)
+        self.marker_id_counter += 1
 
     def attach_graspedobject_to_arm(self):
         attach_link = "gripper_base_link"
@@ -366,7 +445,7 @@ class RAPPickNPlace(object):
                 self.plan_and_move_to_pregrasp(pre_grasp_poses[i], move=True)
                 #TODO
                 # Plan move to grasp from the reached point and get a boolean value if succesful
-                grasp_successful = self.plan_and_move_to_grasp(grasp_poses[i], move=True)
+                grasp_successful = self.plan_and_move_to_grasp_cartesian(pre_grasp_poses[i], grasp_poses[i], move=True)
             i+=1
 
         if (grasp_successful):

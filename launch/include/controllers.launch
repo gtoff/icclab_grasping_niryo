@@ -4,7 +4,7 @@
     <!-- set to true if you want to launch ROS on your computer 
         - controller will just echo position command
         - all hardware relative stuff is deactivated            -->
-    <arg name="simulation_mode" default="false" />
+    <arg name="simulation_mode" default="true" />
     <!-- set to true to disable hardware communication for CAN bus (Niryo Steppers)
      or DXl bus (DEBUG PURPOSES) -->
     <arg name="disable_can_for_debug" default="true" />
@@ -23,8 +23,10 @@
         <rosparam file="$(find niryo_one_tools)/config/end_effectors.yaml" />
     </node>
 
-    <!-- Load controller settings -->
-    <rosparam file="$(find niryo_one_driver)/config/niryo_one_controllers.yaml" command="load"/>  
+    <!-- Load controller settings -->    
+    <rosparam file="$(find niryo_one_driver)/config/niryo_one_controllers.yaml" command="load" unless="$(arg simulation_mode)"/>
+    <rosparam file="$(find icclab_grasping_niryo)/config/niryo_one_controllers_sim.yaml" command="load" if="$(arg simulation_mode)"/>
+    <!-- <rosparam file="$(find niryo_one_driver)/config/controllers.yaml" command="load" if="$(arg simulation_mode)"/> -->
   
     <!-- spawn controllers (including gripper 2)-->
      <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"      

@@ -8,57 +8,41 @@ import subprocess
 import copy
 import rospy
 import time
-import tf
-import geometry_msgs.msg
+import tf2_ros
+import tf2_geometry_msgs
 import math
 from math import pi
 from std_msgs.msg import String
 import os
 
+SOURCE_FRAME = "ground_link"
+TARGET_FRAME = "camera_color_optical_frame"
+
 def calibrate_camera():
 	rospy.init_node('camera_calibration')
-	ar_marker_id = "13"
-	ar_pose = [0.003, -0.23, 0.0, 0.707, 0.0, 0.0, 0.707]
+	tf_buffer = tf2_ros.Buffer(rospy.Duration(1200.0)) #tf buffer length
+	tf_listener = tf2_ros.TransformListener(tf_buffer)
+	t = tf_buffer.lookup_transform(
+		SOURCE_FRAME, 
+		TARGET_FRAME, 
+		rospy.Time(0), #get the tf at first available time
+		rospy.Duration(5.0)) #wait for 1 second
 
-	listener = tf.TransformListener(cache_time=rospy.Duration(10.0))
-	#transformer = tf.TransformerROS(True, rospy.Duration(10.0))
-
-	time.sleep(5)
-	t = rospy.Time.now()
-
-	listener.waitForTransform("ground_link", "camera_color_optical_frame", t, rospy.Duration(4.0))
-	(trans, quat) = listener.lookupTransform("ground_link", "camera_color_optical_frame", t)
-
-	# pose_msg = geometry_msgs.msg.PoseStamped()
-	# pose_msg.header.frame_id = "ar_marker_" + ar_marker_id
-	# pose_msg.header.stamp = t
-	# pose_msg.pose.position.x = trans[0]
-	# pose_msg.pose.position.y = trans[1]
-	# pose_msg.pose.position.z = trans[2]
-	# pose_msg.pose.orientation.x = quat[0]
-	# pose_msg.pose.orientation.y = quat[1]
-	# pose_msg.pose.orientation.z = quat[2]
-	# pose_msg.pose.orientation.w = quat[3]
-	# listener.waitForTransform("ar_marker_"+ar_marker_id, "ground_link", t, rospy.Duration(4.0))
-	# pose_final = listener.transformPose("ground_link", pose_msg)
-
-	#trans = (pose_final.pose.position.x, pose_final.pose.position.y, pose_final.pose.position.z)
-	#quat  = (pose_final.pose.orientation.x, pose_final.pose.orientation.y, pose_final.pose.orientation.z, pose_final.pose.orientation.w)
-
-	print("Ground_link-to-camera_link_frame transform: [x y z | x y z w]")
-	pprint(trans+quat)
-
+	print(t)
+	
 	buf = []
 	buf.append("<launch>\n")
-	buf.append('<node pkg="tf" type="static_transform_publisher" name="camera_color_optical_frame_broadcaster" args="')
-	for x in trans:
-		buf.append(str(x) + " ")
-	for x in quat:
-		buf.append(str(x) + " ")
-	buf.append('ground_link camera_color_optical_frame 100" />\n')
+	buf.append('<node pkg="tf2_ros" type="static_transform_publisher" name="camera_pose_broadcaster" args="')
+	buf.append(str(t.transform.translation.x) + " " + str(t.transform.translation.y) + " " + str(t.transform.translation.z) + " ")
+	buf.append(str(t.transform.rotation.w) + " " + str(t.transform.rotation.x) + " " + str(t.transform.rotation.y) + " " + str(t.transform.rotation.z) + " ")
+	buf.append(t.header.frame_id)
+	buf.append(" ")
+	buf.append(t.child_frame_id)
+	buf.append('" />\n')
 	buf.append("</launch>\n")
 
-	with open(os.path.dirname(__file__) + '/../launch/static_camera_transformation_publisher.launch', 'w') as outfile:
+	print(os.path.dirname(__file__))
+	with open(os.path.abspath(os.path.dirname(__file__)) + os.path.sep + '../launch/static_camera_transformation_publisher.launch', 'w') as outfile:
 		outfile.write(''.join(buf))
 		outfile.close()
 

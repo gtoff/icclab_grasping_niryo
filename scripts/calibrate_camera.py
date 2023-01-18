@@ -34,7 +34,7 @@ def calibrate_camera():
 	buf.append("<launch>\n")
 	buf.append('<node pkg="tf2_ros" type="static_transform_publisher" name="camera_pose_broadcaster" args="')
 	buf.append(str(t.transform.translation.x) + " " + str(t.transform.translation.y) + " " + str(t.transform.translation.z) + " ")
-	buf.append(str(t.transform.rotation.w) + " " + str(t.transform.rotation.x) + " " + str(t.transform.rotation.y) + " " + str(t.transform.rotation.z) + " ")
+	buf.append(str(t.transform.rotation.x) + " " + str(t.transform.rotation.y) + " " + str(t.transform.rotation.z) + " " + str(t.transform.rotation.w) + " ")
 	buf.append(t.header.frame_id)
 	buf.append(" ")
 	buf.append(t.child_frame_id)

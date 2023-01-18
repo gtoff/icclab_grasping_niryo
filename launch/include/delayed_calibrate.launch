@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+   <node pkg="icclab_grasping_niryo" type="calibrate_camera.py" name="calibrate_camera" output="screen"/>
+</launch>

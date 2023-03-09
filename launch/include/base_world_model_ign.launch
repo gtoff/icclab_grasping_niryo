@@ -22,6 +22,8 @@
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
   <arg name="robot_name" default="niryo_one"/>
+
+  <include file="$(find icclab_grasping_niryo)/launch/include/niryo_one_base.launch" pass_all_args="true"/> 
   
   <!-- <include file="$(find ros_gz)/launch/empty_world.launch"> -->
   <include file="$(find ros_ign_gazebo)/launch/ign_gazebo.launch">
@@ -38,5 +40,8 @@
     <arg name="headless" value="$(arg headless)"/>    -->
     <arg name="ign_args" value="$(find icclab_grasping_niryo)/worlds/box_ign.world"/>  
   </include>
+
+  <node name="niryo_one_spawn" pkg="ros_ign_gazebo" type="create" output="screen" args="-world default -urdf -param robot_description -model niryo_one" respawn="false" />  
+
   
 </launch>

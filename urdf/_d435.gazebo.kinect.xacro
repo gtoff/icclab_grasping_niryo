@@ -28,13 +28,13 @@ This is the Gazebo URDF model for the Intel RealSense D435 camera
             <far>10.0</far>
           </clip>
         </camera>
-        <plugin name="${camera_name}_controller" filename="libgazebo_ros_openni_kinect.so">
+        <!-- <plugin name="${camera_name}_controller" filename="libgazebo_ros_openni_kinect.so">
           <cameraName>${camera_name}</cameraName>
           <alwaysOn>true</alwaysOn>
           <updateRate>5</updateRate>
           <imageTopicName>color/image_raw</imageTopicName>
           <depthImageTopicName>depth/image_raw</depthImageTopicName>
-          <!-- changed topic to be consistent with what we have on phys robot -->
+          <! changed topic to be consistent with what we have on phys robot 
           <pointCloudTopicName>depth_registered/points</pointCloudTopicName>
           <cameraInfoTopicName>color/camera_info</cameraInfoTopicName>
           <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>          
@@ -46,7 +46,7 @@ This is the Gazebo URDF model for the Intel RealSense D435 camera
           <distortion_t1>0.0</distortion_t1>
           <distortion_t2>0.0</distortion_t2>
           <pointCloudCutoff>0.4</pointCloudCutoff>
-        </plugin>
+        </plugin> -->
       </sensor>
     </gazebo>
   </xacro:macro>

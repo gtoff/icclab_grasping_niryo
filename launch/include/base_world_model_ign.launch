@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!-- COLLISION GROUND PARAM -->
+  <arg name="collision_ground" default="false"/>
+  <arg name="world_name" default="box.world"/>
+	<arg name="execute_on_niryo_one_raspberry_pi_image" value="false"/>
+  <arg name="urdf_without_meshes" default="false" />
+
+  <!-- camera placement args -->
+  <arg name="x" default="0.66" />
+	<arg name="y" default="0.14" />
+	<arg name="z" default="0.35" />
+	<arg name="R" default="0" />
+	<arg name="P" default="1.2" />
+	<arg name="Y" default="-3" />
+
+
+
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="robot_name" default="niryo_one"/>
+  
+  <!-- <include file="$(find ros_gz)/launch/empty_world.launch"> -->
+  <include file="$(find ros_ign_gazebo)/launch/ign_gazebo.launch">
+    <!--arg name="world_name" value="$(find niryo_one_gazebo)/worlds/niryo_one.world"/-->
+    <!--arg name="world_name" value="$(find icclab_grasping_niryo)/worlds/niryo_one_two_items.world"/-->
+   
+    <!-- <arg name="worldName" value="$(find icclab_grasping_niryo)/worlds/$(arg world_name)"/>  
+    
+    <arg name="verbose" value="true" />
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>    -->
+    <arg name="ign_args" value="$(find icclab_grasping_niryo)/worlds/box_ign.world"/>  
+  </include>
+  
+</launch>

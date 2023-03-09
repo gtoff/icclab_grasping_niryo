@@ -1,0 +1,308 @@
+<?xml version="1.0"?>
+<sdf version="1.4">
+
+	<world name="default">
+		<include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Sun</uri>
+    </include>
+    
+    <include>
+      <uri>https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Ground Plane</uri>
+    </include>
+
+		<physics type="ode">
+			<real_time_update_rate>1000.0</real_time_update_rate>
+			<gravity>0.0 0.0 -9.81</gravity>
+		</physics>
+
+		<!-- The box model | might need to be refractored -->
+		<model name="my_model">
+			<pose>0.3 0 0 0 0 0</pose>
+			<static>false</static>
+			<link name="box">
+				<inertial>
+					<mass>10</mass>
+					<!-- <inertia>
+						<ixx>0.00009375</ixx>
+						<ixy>0.0</ixy>
+						<ixz>0.0</ixz>
+						<iyy>0.000483</iyy>
+						<iyz>0.0</iyz>
+						<izz>0.00009375</izz>
+					</inertia> -->
+				</inertial>
+				<collision name="collision">
+					<geometry>
+						<box>
+							<size>0.012 0.012 0.07</size>
+						</box>
+					</geometry>
+					<surface>
+						<bounce>
+							<restitution_coefficient>0</restitution_coefficient>
+						</bounce>
+					</surface>
+				</collision>
+				<visual name="visual">
+					<geometry>
+						<box>
+							<size>0.012 0.012 0.07</size>
+						</box>
+					</geometry>
+					<surface>
+						<bounce>
+							<restitution_coefficient>0</restitution_coefficient>
+						</bounce>
+						<friction>
+							<ode>
+								<kp>200</kp>
+								<kd>1.0</kd>
+								<mu>100.0</mu>
+								<max_vel>0.5 </max_vel>
+								<mu2>1.0</mu2>
+								<slip1>0</slip1>
+								<slip2>0</slip2>
+								<minDepth>0.01</minDepth>
+							</ode>
+						</friction>
+					</surface>
+				</visual>
+			</link>
+		</model>
+
+		<model name="my_model2">
+			<pose>0.3 0.06 0 0 0 0</pose>
+			<static>false</static>
+			<link name="box2">
+				<inertial>
+					<mass>10</mass>
+					<!-- <inertia>
+						<ixx>0.00009375</ixx>
+						<ixy>0.0</ixy>
+						<ixz>0.0</ixz>
+						<iyy>0.000483</iyy>
+						<iyz>0.0</iyz>
+						<izz>0.00009375</izz>
+					</inertia> -->
+				</inertial>
+				<collision name="collision">
+					<geometry>
+						<box>
+							<size>0.012 0.012 0.07</size>
+						</box>
+					</geometry>
+					<surface>
+						<bounce>
+							<restitution_coefficient>0</restitution_coefficient>
+						</bounce>
+					</surface>
+				</collision>
+				<visual name="visual">
+					<geometry>
+						<box>
+							<size>0.012 0.012 0.07</size>
+						</box>
+					</geometry>
+					<surface>
+						<bounce>
+							<restitution_coefficient>0</restitution_coefficient>
+						</bounce>
+						<friction>
+							<ode>
+								<kp>200</kp>
+								<kd>1.0</kd>
+								<mu>100.0</mu>
+								<max_vel>0.5 </max_vel>
+								<mu2>1.0</mu2>
+								<slip1>0</slip1>
+								<slip2>0</slip2>
+								<minDepth>0.01</minDepth>
+							</ode>
+						</friction>
+					</surface>
+
+				</visual>
+			</link>
+		</model>
+
+		<model name="my_model4">
+			<pose>0.3 -0.06 0 0 0 0</pose>
+			<static>false</static>
+			<link name="box3">
+				<inertial>
+					<mass>10</mass>
+					<!-- <inertia>
+						<ixx>0.00009375</ixx>
+						<ixy>0.0</ixy>
+						<ixz>0.0</ixz>
+						<iyy>0.000483</iyy>
+						<iyz>0.0</iyz>
+						<izz>0.00009375</izz>
+					</inertia> -->
+				</inertial>
+				<collision name="collision">
+					<geometry>
+						<box>
+							<size>0.012 0.012 0.07</size>
+						</box>
+					</geometry>
+					<surface>
+						<bounce>
+							<restitution_coefficient>0</restitution_coefficient>
+						</bounce>
+					</surface>
+				</collision>
+				<visual name="visual">
+					<geometry>
+						<box>
+							<size>0.012 0.012 0.07</size>
+						</box>
+					</geometry>
+					<surface>
+						<bounce>
+							<restitution_coefficient>0</restitution_coefficient>
+						</bounce>
+						<friction>
+							<ode>
+								<kp>200</kp>
+								<kd>1.0</kd>
+								<mu>100.0</mu>
+								<max_vel>0.5 </max_vel>
+								<mu2>1.0</mu2>
+								<slip1>0</slip1>
+								<slip2>0</slip2>
+								<minDepth>0.01</minDepth>
+							</ode>
+						</friction>
+					</surface>
+
+				</visual>
+			</link>
+		</model>
+
+		<!-- box sides -->
+		<model name="box_side1">
+			<pose>-0.4 0 0 0 0 0</pose>
+			<static>true</static>
+			<link name="box_side1">
+				<inertial>
+					<mass>10</mass>
+				</inertial>
+				<collision name="collision">
+					<geometry>
+						<box>
+							<size>0.013 0.2 0.08</size>
+						</box>
+					</geometry>
+					<surface>
+						<bounce>
+							<restitution_coefficient>0</restitution_coefficient>
+						</bounce>
+					</surface>
+				</collision>
+				<visual name="visual">
+					<geometry>
+						<box>
+							<size>0.013 0.2 0.08</size>
+						</box>
+					</geometry>
+				</visual>
+			</link>
+		</model>
+
+		<model name="box_side2">
+			<pose>-0.2 0 0 0 0 0</pose>
+			<static>true</static>
+			<link name="box_side2">
+				<inertial>
+					<mass>10</mass>
+				</inertial>
+				<collision name="collision">
+					<geometry>
+						<box>
+							<size>0.013 0.2 0.08</size>
+						</box>
+					</geometry>
+					<surface>
+						<bounce>
+							<restitution_coefficient>0</restitution_coefficient>
+						</bounce>
+					</surface>
+				</collision>
+				<visual name="visual">
+					<geometry>
+						<box>
+							<size>0.013 0.2 0.08</size>
+						</box>
+					</geometry>
+				</visual>
+			</link>
+		</model>
+
+		<model name="box_side3">
+			<pose>-0.3 0.1 0 0 0 0</pose>
+			<static>true</static>
+			<link name="box_side3">
+				<inertial>
+					<mass>10</mass>
+				</inertial>
+				<collision name="collision">
+					<geometry>
+						<box>
+							<size>0.15 0.013 0.08</size>
+						</box>
+					</geometry>
+					<surface>
+						<bounce>
+							<restitution_coefficient>0</restitution_coefficient>
+						</bounce>
+					</surface>
+				</collision>
+				<visual name="visual">
+					<geometry>
+						<box>
+							<size>0.2 0.013 0.08</size>
+						</box>
+					</geometry>
+				</visual>
+			</link>
+		</model>
+
+		<model name="box_side4">
+			<pose>-0.3 -0.1 0 0 0 0</pose>
+			<static>true</static>
+			<link name="box_side4">
+				<inertial>
+					<mass>10</mass>
+				</inertial>
+				<collision name="collision">
+					<geometry>
+						<box>
+							<size>0.15 0.013 0.08</size>
+						</box>
+					</geometry>
+					<surface>
+						<bounce>
+							<restitution_coefficient>0</restitution_coefficient>
+						</bounce>
+					</surface>
+				</collision>
+				<visual name="visual">
+					<geometry>
+						<box>
+							<size>0.2 0.013 0.08</size>
+						</box>
+					</geometry>
+				</visual>
+			</link>
+		</model>
+		<gazebo reference="box">
+			<implicitSpringDamper>1</implicitSpringDamper>
+			<mu1>100.0</mu1>
+			<mu2>1.0</mu2>
+			<fdir1>-1 0 0</fdir1>
+			<minDepth>0.01</minDepth>
+		</gazebo>
+
+	</world>
+</sdf>

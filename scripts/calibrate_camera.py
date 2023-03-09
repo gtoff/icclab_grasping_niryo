@@ -16,7 +16,7 @@ from std_msgs.msg import String
 import os
 
 SOURCE_FRAME = "ground_link"
-TARGET_FRAME = "camera_color_optical_frame"
+TARGET_FRAME = "camera_link"
 
 def calibrate_camera():
 	rospy.init_node('camera_calibration')

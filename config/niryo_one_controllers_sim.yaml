@@ -1,6 +1,6 @@
 # Settings for ros_control control loop
 hardware_control_loop:
-    loop_hz: 100
+    loop_hz: 250
 
 # Publish all joint states -----------------------
 joint_state_controller:
@@ -18,8 +18,8 @@ niryo_one_follow_joint_trajectory_controller:
         - joint_5  
         - joint_6
     constraints:
-        goal_time: 5.0
-        stopped_velocity_tolerance: 0.05
+        goal_time: 1.0
+        stopped_velocity_tolerance: 0
         joint_1: {trajectory: 0.5, goal: 0.2}
         joint_2: {trajectory: 0.5, goal: 0.2}
         joint_3: {trajectory: 0.5, goal: 0.2}
@@ -27,8 +27,8 @@ niryo_one_follow_joint_trajectory_controller:
         joint_5: {trajectory: 1.0, goal: 0.3}
         joint_6: {trajectory: 1.0, goal: 0.3}
     stop_trajectory_duration: 1.0
-    state_publish_rate: 50
-    # action_monitor_rate: 50
+    state_publish_rate: 200
+#action_monitor_rate: 20
 
 # NOTE: this requires a hardware_interface/PositionJointInterface on the gripper joints
 gripper_follow_joint_trajectory_controller:

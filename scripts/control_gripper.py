@@ -50,7 +50,7 @@ class control_gripper:
       joint_state.name = gripper_joint_names
       joint_state.position = self.GRIPPER_POSITION
 
-      rospy.loginfo(joint_state)
+      # rospy.loginfo(joint_state)
       self.jointStates_pub.publish(joint_state)
       rate.sleep()
 

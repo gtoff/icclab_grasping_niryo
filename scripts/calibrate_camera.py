@@ -15,7 +15,7 @@ from math import pi
 from std_msgs.msg import String
 import os
 
-SOURCE_FRAME = "ground_link"
+SOURCE_FRAME = "base_link"
 TARGET_FRAME = "camera_link"
 
 def calibrate_camera():
